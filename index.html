@@ -1,1168 +1,1399 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Roman's Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
+<title>Roman's Fit</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Instrument+Mono:ital@0;1&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0a0a0f;
-  --surface: #12121a;
-  --surface2: #1a1a26;
-  --border: #2a2a3a;
-  --text: #f0eeff;
-  --muted: #6b6b8a;
-  --green: #00ff88;
-  --blue: #4488ff;
-  --orange: #ff6b35;
-  --purple: #b06bff;
-  --red: #ff4466;
-  --yellow: #ffd60a;
+  --bg: #f5f3ef;
+  --bg2: #eceae4;
+  --card: #ffffff;
+  --border: #e0ddd6;
+  --text: #1a1814;
+  --text2: #6b6660;
+  --text3: #9b9690;
+  --lime: #c8f135;
+  --lime-dark: #a8d01a;
+  --ink: #1a1814;
+  --red: #ff4757;
+  --blue: #4a90d9;
+  --orange: #ff7043;
+  --purple: #7c5cbf;
+  --green: #2ecc71;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Syne', sans-serif;
+  font-family: 'Cabinet Grotesk', sans-serif;
   min-height: 100vh;
   max-width: 430px;
   margin: 0 auto;
-  padding-bottom: 100px;
+  padding-bottom: 90px;
   overflow-x: hidden;
 }
 .header {
-  padding: 52px 20px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  background: rgba(10,10,15,0.92);
-  backdrop-filter: blur(16px);
-  z-index: 100;
+  padding: 56px 20px 14px;
+  background: var(--bg);
+  position: sticky; top: 0; z-index: 100;
   border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
 }
-.header-left h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
-.header-left p { font-size: 12px; color: var(--muted); margin-top: 1px; }
-.streak-badge {
-  background: linear-gradient(135deg, var(--orange), #ff9500);
-  color: #000;
-  font-weight: 800;
-  font-size: 13px;
-  padding: 6px 12px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
+.header-name { font-size: 13px; font-weight: 500; color: var(--text2); letter-spacing: 0.3px; }
+.header-title { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; color: var(--ink); margin-top: 1px; }
+.streak-pill { background: var(--ink); color: var(--lime); font-weight: 800; font-size: 14px; padding: 7px 14px; border-radius: 99px; display: flex; align-items: center; gap: 5px; }
 .bottom-nav {
-  position: fixed;
-  bottom: 0; left: 50%;
-  transform: translateX(-50%);
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
   width: 100%; max-width: 430px;
-  background: rgba(18,18,26,0.97);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border);
-  display: flex;
-  z-index: 200;
+  background: var(--ink); display: flex; z-index: 200;
+  padding: 0 4px 20px; border-radius: 20px 20px 0 0;
 }
 .nav-btn {
-  flex: 1;
-  padding: 10px 4px 18px;
+  flex: 1; padding: 12px 4px 0;
   background: none; border: none;
-  color: var(--muted);
-  font-family: 'Syne', sans-serif;
-  font-size: 10px; font-weight: 600;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  display: flex; flex-direction: column;
-  align-items: center; gap: 4px;
-  transition: color 0.2s;
+  color: rgba(255,255,255,0.35);
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.5px;
+  cursor: pointer; display: flex; flex-direction: column;
+  align-items: center; gap: 5px; transition: color 0.2s; text-transform: uppercase;
 }
-.nav-btn.active { color: var(--green); }
+.nav-btn.active { color: var(--lime); }
 .nav-icon { font-size: 19px; line-height: 1; }
-.screen { display: none; padding: 16px 20px; animation: fadeIn 0.25s ease; }
+.screen { display: none; padding: 20px; animation: fadeUp 0.2s ease; }
 .screen.active { display: block; }
-@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 12px;
-}
-.card-title {
-  font-size: 10px; font-weight: 700;
-  letter-spacing: 2px; text-transform: uppercase;
-  color: var(--muted); margin-bottom: 12px;
-}
-.section-label {
-  font-size: 18px; font-weight: 800;
-  margin: 20px 0 12px; letter-spacing: -0.3px;
-}
-.section-label span { color: var(--green); }
-.btn {
-  padding: 10px 16px;
-  border-radius: 10px; border: none;
-  font-family: 'Syne', sans-serif;
-  font-weight: 700; font-size: 13px;
-  cursor: pointer;
-  transition: all 0.15s;
-  display: flex; align-items: center; gap: 6px;
-}
-.btn:active { transform: scale(0.96); }
-.btn-green { background: var(--green); color: #000; flex: 1; justify-content: center; }
-.btn-outline { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
-.btn-blue { background: var(--blue); color: #fff; justify-content: center; }
-.btn-purple { background: var(--purple); color: #fff; flex:1; justify-content: center; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; margin-bottom: 12px; box-shadow: var(--shadow); }
+.card-label { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); margin-bottom: 14px; }
+.section-head { display: flex; align-items: baseline; gap: 8px; margin: 24px 0 14px; }
+.section-head h2 { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; }
+.section-head span { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; }
 
-/* MACRO HERO */
-.macro-hero {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: 16px;
-padding: 20px; margin-bottom: 12px;
-display: flex; align-items: center; gap: 20px;
-}
-.ring-wrap { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
-.ring-wrap svg { transform: rotate(-90deg); }
-.ring-center {
-position: absolute; top:50%; left:50%;
-transform: translate(-50%,-50%);
-text-align: center;
-}
-.ring-cal { font-size: 22px; font-weight: 800; line-height: 1; }
-.ring-label { font-size: 9px; color: var(–muted); letter-spacing: 1px; margin-top: 2px; }
-.macro-bars { flex: 1; }
-.macro-bar-item { margin-bottom: 10px; }
-.macro-bar-top { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; }
-.macro-bar-name { color: var(–muted); font-weight: 600; }
-.bar-track { height: 6px; background: var(–border); border-radius: 99px; overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 99px; transition: width 0.6s cubic-bezier(.34,1.56,.64,1); }
+/* CALORIE HERO */
+.cal-hero { background: var(--ink); border-radius: 22px; padding: 22px; margin-bottom: 12px; color: white; position: relative; overflow: hidden; }
+.cal-hero::before { content:''; position:absolute; top:-40px; right:-40px; width:160px; height:160px; background:var(--lime); border-radius:50%; opacity:0.08; }
+.cal-hero-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.cal-hero-label { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,0.5); }
+.cal-hero-date { font-size:11px; color:rgba(255,255,255,0.4); font-family:'Instrument Mono',monospace; }
+.cal-ring-row { display:flex; align-items:center; gap:20px; }
+.ring-wrap { position:relative; width:90px; height:90px; flex-shrink:0; }
+.ring-wrap svg { transform:rotate(-90deg); }
+.ring-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; }
+.ring-cal { font-size:20px; font-weight:900; color:white; line-height:1; }
+.ring-sub { font-size:9px; color:rgba(255,255,255,0.4); letter-spacing:1px; margin-top:2px; }
+.macro-bars { flex:1; }
+.mbar { margin-bottom:10px; }
+.mbar:last-child { margin-bottom:0; }
+.mbar-top { display:flex; justify-content:space-between; font-size:11px; font-weight:700; margin-bottom:5px; }
+.mbar-name { color:rgba(255,255,255,0.5); }
+.mbar-val { color:white; }
+.mbar-track { height:5px; background:rgba(255,255,255,0.1); border-radius:99px; overflow:hidden; }
+.mbar-fill { height:100%; border-radius:99px; transition:width 0.7s cubic-bezier(.34,1.56,.64,1); }
 
 /* CHECKLIST */
-.check-item {
-display: flex; align-items: center; gap: 12px;
-padding: 12px 0; border-bottom: 1px solid var(–border);
-cursor: pointer; transition: opacity 0.2s;
-}
-.check-item:last-child { border-bottom: none; }
-.check-item.done { opacity: 0.45; }
-.check-box {
-width: 24px; height: 24px;
-border: 2px solid var(–border);
-border-radius: 8px;
-display: flex; align-items: center; justify-content: center;
-flex-shrink: 0; transition: all 0.2s; font-size: 13px;
-}
-.check-item.done .check-box { background: var(–green); border-color: var(–green); color: #000; }
-.check-text { font-size: 14px; font-weight: 500; flex: 1; }
-.check-sub { font-size: 11px; color: var(–muted); margin-top: 1px; }
-
-/* AI FOOD */
-.ai-input-wrap {
-background: var(–surface2);
-border: 1px solid var(–border);
-border-radius: 14px; padding: 14px; margin-bottom: 12px;
-}
-.ai-input-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; color: var(–green); text-transform: uppercase; margin-bottom: 8px; }
-.ai-textarea {
-width: 100%; background: none; border: none; outline: none;
-color: var(–text); font-family: ‘Syne’, sans-serif;
-font-size: 14px; resize: none; min-height: 60px; line-height: 1.5;
-}
-.ai-textarea::placeholder { color: var(–muted); }
-.ai-btns { display: flex; gap: 8px; margin-top: 10px; }
-.ai-loading { display: none; text-align: center; padding: 20px; color: var(–muted); font-size: 13px; }
-.ai-loading.show { display: block; }
-.spinner { width: 28px; height: 28px; border: 3px solid var(–border); border-top-color: var(–green); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 10px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.food-log-item {
-display: flex; justify-content: space-between; align-items: center;
-padding: 11px 0; border-bottom: 1px solid var(–border);
-animation: fadeIn 0.3s ease;
-}
-.food-log-item:last-child { border-bottom: none; }
-.food-name { font-size: 14px; font-weight: 600; }
-.food-macros { font-size: 11px; color: var(–muted); margin-top: 2px; }
-.food-cal { font-size: 16px; font-weight: 800; color: var(–green); }
-.food-del { background: none; border: none; color: var(–muted); font-size: 18px; cursor: pointer; padding: 4px; }
-.scroll-x { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
-.scroll-x::-webkit-scrollbar { display: none; }
-.quick-add-chip {
-flex-shrink: 0; background: var(–surface2);
-border: 1px solid var(–border); border-radius: 20px;
-padding: 8px 14px; font-size: 12px; font-weight: 600;
-cursor: pointer; white-space: nowrap; transition: all 0.15s;
-}
-.quick-add-chip:active { background: var(–green); color: #000; border-color: var(–green); }
+.check-row { display:flex; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid var(--border); cursor:pointer; }
+.check-row:last-child { border-bottom:none; }
+.check-box { width:26px; height:26px; border:2px solid var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:13px; transition:all 0.2s; background:var(--bg); }
+.check-row.done .check-box { background:var(--ink); border-color:var(--ink); color:var(--lime); }
+.check-row.done .check-main { opacity:0.4; }
+.check-main { flex:1; }
+.check-title { font-size:14px; font-weight:700; }
+.check-sub { font-size:11px; color:var(--text3); margin-top:1px; }
 
 /* STATS */
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-.stat-card { background: var(–surface); border: 1px solid var(–border); border-radius: 14px; padding: 14px; }
-.stat-card-label { font-size: 10px; color: var(–muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
-.stat-card-val { font-size: 28px; font-weight: 800; line-height: 1; }
-.stat-card-unit { font-size: 12px; color: var(–muted); margin-left: 2px; }
-.stat-card-change { font-size: 11px; margin-top: 4px; }
-.up { color: var(–green); } .down { color: var(–red); }
+.stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+.stat-tile { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; box-shadow:var(--shadow); }
+.stat-tile-label { font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
+.stat-tile-val { font-size:30px; font-weight:900; letter-spacing:-1px; line-height:1; }
+.stat-tile-unit { font-size:13px; font-weight:500; color:var(--text3); margin-left:2px; }
+.stat-tile-change { font-size:11px; font-weight:700; margin-top:5px; }
+.up { color:var(--green); } .dn { color:var(--red); }
+.stat-lime { background:var(--lime); border-color:var(--lime); }
+.stat-lime .stat-tile-label { color:rgba(0,0,0,0.5); }
+.stat-lime .stat-tile-val { color:var(--ink); }
+.stat-ink { background:var(--ink); border-color:var(--ink); }
+.stat-ink .stat-tile-label { color:rgba(255,255,255,0.4); }
+.stat-ink .stat-tile-val { color:white; }
+.stat-ink .stat-tile-change { color:var(--lime); }
 
-/* STRENGTH TRACKER */
-.lift-card {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: 16px;
-margin-bottom: 10px;
-overflow: hidden;
-}
-.lift-header {
-display: flex; justify-content: space-between;
-align-items: center; padding: 14px 16px;
-cursor: pointer;
-}
-.lift-name { font-size: 16px; font-weight: 800; }
-.lift-meta { font-size: 11px; color: var(–muted); margin-top: 2px; }
-.lift-badge {
-text-align: right;
-}
-.lift-1rm { font-family: ‘Syne Mono’, monospace; font-size: 20px; font-weight: 700; color: var(–purple); }
-.lift-1rm-label { font-size: 9px; color: var(–muted); letter-spacing: 1px; }
-.lift-body { display: none; border-top: 1px solid var(–border); padding: 16px; }
-.lift-body.open { display: block; }
+/* FOOD */
+.food-box { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:16px; margin-bottom:12px; box-shadow:var(--shadow); }
+.food-box-label { font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--text3); margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.food-box-label span { color:var(--lime-dark); }
+.food-textarea { width:100%; background:var(--bg); border:1.5px solid var(--border); border-radius:12px; padding:12px 14px; color:var(--text); font-family:'Cabinet Grotesk',sans-serif; font-size:15px; font-weight:500; resize:none; min-height:70px; line-height:1.5; outline:none; transition:border-color 0.2s; }
+.food-textarea::placeholder { color:var(--text3); font-weight:400; }
+.food-textarea:focus { border-color:var(--ink); }
+.food-btns { display:flex; gap:8px; margin-top:10px; }
+.btn { padding:11px 18px; border-radius:12px; border:none; font-family:'Cabinet Grotesk',sans-serif; font-weight:800; font-size:14px; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; gap:6px; letter-spacing:-0.2px; }
+.btn:active { transform:scale(0.96); opacity:0.85; }
+.btn-ink { background:var(--ink); color:var(--lime); flex:1; justify-content:center; }
+.btn-outline { background:var(--bg); border:1.5px solid var(--border); color:var(--text); flex-shrink:0; }
+.btn-lime { background:var(--lime); color:var(--ink); flex:1; justify-content:center; }
+.btn-purple { background:var(--purple); color:white; flex:1; justify-content:center; }
+.ai-load { display:none; align-items:center; gap:12px; padding:16px 0; }
+.ai-load.show { display:flex; }
+.spin { width:22px; height:22px; border:2.5px solid var(--border); border-top-color:var(--ink); border-radius:50%; animation:spin 0.7s linear infinite; flex-shrink:0; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.ai-load-text { font-size:13px; font-weight:600; color:var(--text2); }
+.chips { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; margin-bottom:14px; }
+.chips::-webkit-scrollbar { display:none; }
+.chip { flex-shrink:0; background:var(--card); border:1.5px solid var(--border); border-radius:99px; padding:8px 14px; font-family:'Cabinet Grotesk',sans-serif; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; color:var(--text); transition:all 0.15s; box-shadow:var(--shadow); }
+.chip:active { background:var(--ink); color:var(--lime); border-color:var(--ink); }
+.food-item { display:flex; align-items:center; padding:12px 0; border-bottom:1px solid var(--border); gap:12px; animation:fadeUp 0.25s ease; }
+.food-item:last-child { border-bottom:none; }
+.food-dot { width:8px; height:8px; background:var(--lime-dark); border-radius:50%; flex-shrink:0; }
+.food-info { flex:1; min-width:0; }
+.food-name { font-size:14px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.food-meta { font-size:11px; color:var(--text3); font-weight:500; margin-top:1px; }
+.food-cal-val { font-size:18px; font-weight:900; letter-spacing:-0.5px; flex-shrink:0; }
+.food-del { background:none; border:none; color:var(--text3); font-size:20px; cursor:pointer; padding:2px 4px; flex-shrink:0; line-height:1; }
+.food-empty { text-align:center; padding:24px 0; color:var(--text3); font-size:13px; font-weight:500; line-height:1.6; }
 
-/* Session prescription */
-.session-sets { margin-bottom: 16px; }
-.set-row {
-display: flex; align-items: center; gap: 10px;
-padding: 10px 0; border-bottom: 1px solid var(–border);
-}
-.set-row:last-child { border-bottom: none; }
-.set-num {
-font-family: ‘Syne Mono’, monospace;
-font-size: 12px; color: var(–muted);
-width: 30px; flex-shrink: 0;
-}
-.set-weight {
-font-size: 20px; font-weight: 800; color: var(–text);
-flex: 1;
-}
-.set-weight span { font-size: 12px; color: var(–muted); font-weight: 400; margin-left: 2px; }
-.set-reps { font-size: 13px; color: var(–purple); font-weight: 700; white-space: nowrap; }
-.set-check {
-width: 26px; height: 26px;
-border: 2px solid var(–border); border-radius: 8px;
-display: flex; align-items: center; justify-content: center;
-cursor: pointer; font-size: 13px; flex-shrink: 0;
-transition: all 0.2s;
-}
-.set-check.done { background: var(–green); border-color: var(–green); color: #000; }
+/* STRENGTH */
+.lift-card { background:var(--card); border:1px solid var(--border); border-radius:18px; margin-bottom:10px; overflow:hidden; box-shadow:var(--shadow); }
+.lift-hdr { display:flex; align-items:center; padding:16px 18px; cursor:pointer; gap:14px; }
+.lift-icon { width:40px; height:40px; background:var(--bg); border:1px solid var(--border); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.lift-info { flex:1; }
+.lift-name { font-size:15px; font-weight:800; letter-spacing:-0.3px; }
+.lift-cat { font-size:11px; color:var(--text3); font-weight:600; margin-top:1px; }
+.lift-orm-wrap { text-align:right; }
+.lift-orm { font-size:22px; font-weight:900; color:var(--purple); letter-spacing:-0.5px; line-height:1; }
+.lift-orm-lbl { font-size:9px; color:var(--text3); font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.lift-body { display:none; border-top:1px solid var(--border); padding:16px 18px; }
+.lift-body.open { display:block; }
+.up-banner { background:var(--lime); border-radius:12px; padding:14px; margin-bottom:14px; display:none; }
+.up-banner.show { display:block; }
+.up-banner h4 { font-size:15px; font-weight:900; color:var(--ink); margin-bottom:4px; }
+.up-banner p { font-size:12px; color:rgba(0,0,0,0.6); line-height:1.5; margin-bottom:10px; }
+.sets-label { font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--text3); margin-bottom:10px; }
+.set-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); }
+.set-row:last-child { border-bottom:none; }
+.set-num { font-family:'Instrument Mono',monospace; font-size:11px; color:var(--text3); width:36px; flex-shrink:0; }
+.set-w { font-size:20px; font-weight:900; letter-spacing:-0.5px; flex:1; }
+.set-w small { font-size:12px; font-weight:500; color:var(--text3); margin-left:2px; }
+.set-reps { font-size:12px; font-weight:800; color:var(--purple); white-space:nowrap; }
+.set-chk { width:28px; height:28px; border:2px solid var(--border); border-radius:8px; background:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; flex-shrink:0; transition:all 0.2s; }
+.set-chk.done { background:var(--ink); border-color:var(--ink); color:var(--lime); }
+.warmup-section { margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
+.warmup-row { display:flex; align-items:center; gap:10px; padding:7px 0; }
+.warmup-pct { font-family:'Instrument Mono',monospace; font-size:10px; color:var(--text3); width:36px; }
+.warmup-w { font-size:16px; font-weight:700; color:var(--text2); flex:1; }
+.warmup-w small { font-size:11px; color:var(--text3); }
+.warmup-reps { font-size:11px; color:var(--text3); font-weight:600; }
+.lift-note { background:var(--bg); border-radius:10px; padding:10px 12px; margin:12px 0; font-size:12px; color:var(--text2); font-weight:500; line-height:1.5; }
+.orm-row { display:flex; gap:8px; margin-top:12px; }
+.orm-inp { flex:1; background:var(--bg); border:1.5px solid var(--border); border-radius:10px; padding:10px 14px; color:var(--text); font-family:'Cabinet Grotesk',sans-serif; font-size:16px; font-weight:700; outline:none; }
+.orm-inp:focus { border-color:var(--purple); }
+.orm-inp::placeholder { color:var(--text3); font-weight:500; font-size:14px; }
+.sess-hist { margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
+.hist-row { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--border); }
+.hist-row:last-child { border-bottom:none; }
+.hist-date { font-size:12px; color:var(--text3); font-family:'Instrument Mono',monospace; }
+.hist-val { font-size:12px; font-weight:700; }
+.rule-card { background:var(--ink); color:white; border-radius:16px; padding:16px 18px; margin-bottom:14px; }
+.rule-card h4 { font-size:13px; font-weight:800; color:var(--lime); margin-bottom:6px; }
+.rule-card p { font-size:12px; color:rgba(255,255,255,0.6); line-height:1.6; }
+.onboard { background:linear-gradient(135deg,#7c5cbf,#4a90d9); border-radius:18px; padding:20px; margin-bottom:14px; color:white; }
+.onboard h3 { font-size:18px; font-weight:900; margin-bottom:6px; }
+.onboard p { font-size:13px; opacity:0.8; line-height:1.5; margin-bottom:14px; }
 
-/* Progress indicator */
-.progress-rule {
-background: rgba(0,255,136,0.06);
-border: 1px solid rgba(0,255,136,0.2);
-border-radius: 10px; padding: 12px 14px;
-margin-bottom: 12px;
-}
-.progress-rule h4 { font-size: 12px; font-weight: 700; color: var(–green); margin-bottom: 4px; }
-.progress-rule p { font-size: 12px; color: var(–muted); line-height: 1.5; }
+/* PLAN */
+.day-card { background:var(--card); border:1px solid var(--border); border-radius:18px; margin-bottom:10px; overflow:hidden; box-shadow:var(--shadow); }
+.day-hdr { display:flex; align-items:center; justify-content:space-between; padding:16px 18px; cursor:pointer; }
+.day-hdr-left { flex:1; }
+.day-title { font-size:16px; font-weight:900; letter-spacing:-0.3px; }
+.day-sub { font-size:11px; color:var(--text3); font-weight:600; margin-top:2px; }
+.day-tag { font-size:10px; font-weight:800; padding:5px 12px; border-radius:99px; letter-spacing:0.5px; text-transform:uppercase; }
+.tag-push { background:rgba(200,241,53,0.2); color:#6a9a00; }
+.tag-pull { background:rgba(74,144,217,0.15); color:#2d6fa8; }
+.tag-legs { background:rgba(255,112,67,0.15); color:#c94b1a; }
+.tag-rest { background:var(--bg2); color:var(--text3); }
+.day-body { display:none; border-top:1px solid var(--border); }
+.day-body.open { display:block; }
+.ex-row { display:flex; align-items:center; padding:13px 18px; border-bottom:1px solid var(--border); gap:12px; }
+.ex-row:last-child { border-bottom:none; }
+.ex-chk { width:24px; height:24px; border:2px solid var(--border); border-radius:7px; background:var(--bg); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; flex-shrink:0; transition:all 0.2s; }
+.ex-chk.done { background:var(--ink); border-color:var(--ink); color:var(--lime); }
+.ex-det { flex:1; }
+.ex-nm { font-size:14px; font-weight:700; }
+.ex-nt { font-size:11px; color:var(--text3); font-weight:500; margin-top:1px; }
+.ex-sets { font-family:'Instrument Mono',monospace; font-size:12px; color:var(--purple); font-weight:700; white-space:nowrap; }
 
-/* Ready to progress banner */
-.upgrade-banner {
-background: linear-gradient(135deg, rgba(0,255,136,0.15), rgba(68,136,255,0.1));
-border: 1px solid rgba(0,255,136,0.35);
-border-radius: 12px; padding: 14px; margin-bottom: 10px;
-display: none;
-}
-.upgrade-banner.show { display: block; }
-.upgrade-banner h4 { font-size: 14px; font-weight: 800; color: var(–green); margin-bottom: 4px; }
-.upgrade-banner p { font-size: 12px; color: var(–muted); line-height: 1.5; margin-bottom: 10px; }
+/* WEIGHT */
+.w-inp-row { display:flex; gap:8px; }
+.w-inp { flex:1; background:var(--bg); border:1.5px solid var(--border); border-radius:12px; padding:13px 16px; color:var(--text); font-family:'Cabinet Grotesk',sans-serif; font-size:18px; font-weight:800; outline:none; }
+.w-inp:focus { border-color:var(--ink); }
+.w-inp::placeholder { color:var(--text3); font-weight:500; font-size:15px; }
+canvas { width:100% !important; display:block; }
+.chart-empty { text-align:center; padding:30px 0; color:var(--text3); font-size:13px; font-weight:500; }
+.wlog-row { display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid var(--border); }
+.wlog-row:last-child { border-bottom:none; }
+.wlog-date { font-size:12px; color:var(--text3); font-family:'Instrument Mono',monospace; }
+.wlog-val { font-size:20px; font-weight:900; letter-spacing:-0.5px; }
 
-/* 1RM edit input */
-.orm-edit-row { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(–border); }
-.orm-input {
-flex: 1; background: var(–surface2); border: 1px solid var(–border);
-border-radius: 10px; padding: 10px 14px;
-color: var(–text); font-family: ‘Syne’, sans-serif;
-font-size: 15px; font-weight: 700; outline: none;
-}
-.orm-input:focus { border-color: var(–green); }
+/* HOW-TO TAB */
+.howto-day-card { background:var(--card); border:1px solid var(--border); border-radius:18px; margin-bottom:10px; overflow:hidden; box-shadow:var(--shadow); }
+.howto-day-hdr { display:flex; align-items:center; justify-content:space-between; padding:16px 18px; cursor:pointer; }
+.howto-day-title { font-size:16px; font-weight:900; letter-spacing:-0.3px; }
+.howto-day-sub { font-size:11px; color:var(--text3); font-weight:600; margin-top:2px; }
+.howto-day-body { display:none; border-top:1px solid var(--border); }
+.howto-day-body.open { display:block; }
+.howto-ex-row { display:flex; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border); cursor:pointer; gap:12px; transition:background 0.15s; }
+.howto-ex-row:last-child { border-bottom:none; }
+.howto-ex-row:active { background:var(--bg); }
+.howto-ex-icon { width:36px; height:36px; background:var(--bg); border:1px solid var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+.howto-ex-info { flex:1; }
+.howto-ex-name { font-size:14px; font-weight:800; }
+.howto-ex-muscle { font-size:11px; color:var(--text3); font-weight:600; margin-top:1px; }
+.howto-arrow { font-size:16px; color:var(--text3); }
 
-/* Session history */
-.session-history { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(–border); }
-.history-row { display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; border-bottom: 1px solid var(–border); }
-.history-row:last-child { border-bottom: none; }
-.history-date { color: var(–muted); }
-.history-val { font-weight: 700; color: var(–blue); }
-
-/* WORKOUT */
-.workout-day { background: var(–surface); border: 1px solid var(–border); border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
-.workout-day-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; cursor: pointer; }
-.workout-day-title { font-size: 16px; font-weight: 800; }
-.workout-day-sub { font-size: 11px; color: var(–muted); margin-top: 2px; }
-.workout-tag { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px; }
-.tag-push { background: rgba(0,255,136,0.15); color: var(–green); }
-.tag-pull { background: rgba(68,136,255,0.15); color: var(–blue); }
-.tag-legs { background: rgba(255,107,53,0.15); color: var(–orange); }
-.tag-rest { background: rgba(107,107,138,0.15); color: var(–muted); }
-.workout-day-body { display: none; border-top: 1px solid var(–border); }
-.workout-day-body.open { display: block; }
-.ex-item { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(–border); gap: 12px; }
-.ex-item:last-child { border-bottom: none; }
-.ex-check { width: 22px; height: 22px; border: 2px solid var(–border); border-radius: 6px; flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.2s; }
-.ex-check.done { background: var(–green); border-color: var(–green); color: #000; }
-.ex-details { flex: 1; }
-.ex-n { font-size: 14px; font-weight: 600; }
-.ex-s { font-size: 11px; color: var(–muted); margin-top: 1px; }
-.ex-sets-tag { font-family: ‘Syne Mono’, monospace; font-size: 11px; color: var(–purple); white-space: nowrap; }
-
-/* WEIGHT CHART */
-canvas { width: 100% !important; border-radius: 12px; }
-.weight-input-row { display: flex; gap: 8px; }
-.weight-input { flex: 1; background: var(–surface2); border: 1px solid var(–border); border-radius: 10px; padding: 12px 14px; color: var(–text); font-family: ‘Syne’, sans-serif; font-size: 15px; font-weight: 700; outline: none; }
-.weight-input:focus { border-color: var(–green); }
+/* EXERCISE DETAIL MODAL */
+.ex-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:500; align-items:flex-end; justify-content:center; backdrop-filter:blur(4px); }
+.ex-modal-bg.show { display:flex; }
+.ex-modal { background:var(--card); border-radius:24px 24px 0 0; padding:0; width:100%; max-width:430px; max-height:88vh; overflow-y:auto; animation:slideUp 0.3s cubic-bezier(.34,1.56,.64,1); }
+@keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
+.ex-modal-hero { background:var(--ink); padding:24px 20px 20px; color:white; position:relative; }
+.ex-modal-close { position:absolute; top:20px; right:20px; width:32px; height:32px; background:rgba(255,255,255,0.1); border-radius:50%; border:none; color:white; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.ex-modal-icon { font-size:36px; margin-bottom:10px; }
+.ex-modal-name { font-size:22px; font-weight:900; letter-spacing:-0.5px; margin-bottom:4px; }
+.ex-modal-muscle { font-size:12px; color:var(--lime); font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.ex-modal-body { padding:20px; }
+.ex-section { margin-bottom:20px; }
+.ex-section-title { font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--text3); margin-bottom:10px; }
+.ex-why { background:rgba(200,241,53,0.12); border:1px solid rgba(200,241,53,0.3); border-radius:12px; padding:12px 14px; font-size:13px; color:var(--text); font-weight:500; line-height:1.6; margin-bottom:16px; }
+.step-row { display:flex; gap:12px; margin-bottom:10px; }
+.step-num { width:26px; height:26px; background:var(--ink); color:var(--lime); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; flex-shrink:0; margin-top:1px; }
+.step-text { font-size:13px; font-weight:500; color:var(--text); line-height:1.5; flex:1; }
+.tip-row { display:flex; gap:10px; margin-bottom:8px; align-items:flex-start; }
+.tip-icon { font-size:14px; flex-shrink:0; margin-top:1px; }
+.tip-text { font-size:12px; color:var(--text2); font-weight:500; line-height:1.5; }
+.mistake-row { display:flex; gap:10px; margin-bottom:8px; align-items:flex-start; }
+.mistake-x { font-size:13px; color:var(--red); flex-shrink:0; font-weight:800; margin-top:1px; }
+.mistake-text { font-size:12px; color:var(--text2); font-weight:500; line-height:1.5; }
+.sets-rec { background:var(--bg); border-radius:12px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; }
+.sets-rec-label { font-size:12px; color:var(--text2); font-weight:600; }
+.sets-rec-val { font-family:'Instrument Mono',monospace; font-size:14px; font-weight:700; color:var(--purple); }
 
 /* REMINDER */
-.reminder-banner {
-background: linear-gradient(135deg, rgba(255,214,10,0.15), rgba(255,107,53,0.1));
-border: 1px solid rgba(255,214,10,0.3);
-border-radius: 14px; padding: 14px 16px;
-display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
-}
-.reminder-icon { font-size: 24px; }
-.reminder-text h4 { font-size: 14px; font-weight: 700; color: var(–yellow); }
-.reminder-text p { font-size: 12px; color: var(–muted); margin-top: 2px; }
+.reminder { background:#fff8e1; border:1.5px solid #ffe082; border-radius:14px; padding:14px 16px; display:flex; gap:12px; align-items:center; margin-bottom:12px; }
+.reminder-icon { font-size:22px; flex-shrink:0; }
+.reminder h4 { font-size:13px; font-weight:800; color:#b8860b; }
+.reminder p { font-size:12px; color:#8a6914; margin-top:2px; line-height:1.4; }
 
 /* TOAST */
-.toast {
-position: fixed; bottom: 90px; left: 50%;
-transform: translateX(-50%) translateY(20px);
-background: var(–green); color: #000;
-font-weight: 700; font-size: 14px;
-padding: 12px 20px; border-radius: 30px;
-opacity: 0; transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
-z-index: 999; white-space: nowrap; pointer-events: none;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* MODAL */
-.modal-overlay {
-display: none; position: fixed; inset: 0;
-background: rgba(0,0,0,0.8); z-index: 500;
-align-items: flex-end; justify-content: center;
-}
-.modal-overlay.show { display: flex; }
-.modal {
-background: var(–surface); border: 1px solid var(–border);
-border-radius: 24px 24px 0 0; padding: 24px 20px 40px;
-width: 100%; max-width: 430px;
-animation: slideUp 0.3s cubic-bezier(.34,1.56,.64,1);
-}
-@keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
-.modal h3 { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
-.modal p { font-size: 13px; color: var(–muted); margin-bottom: 16px; line-height: 1.5; }
-.modal-input {
-width: 100%; background: var(–surface2); border: 1px solid var(–border);
-border-radius: 12px; padding: 14px 16px; color: var(–text);
-font-family: ‘Syne’, sans-serif; font-size: 18px; font-weight: 700;
-outline: none; margin-bottom: 12px;
-}
-.modal-input:focus { border-color: var(–green); }
-.modal-btns { display: flex; gap: 10px; }
-
-/* Onboarding hint */
-.onboard-card {
-background: linear-gradient(135deg, rgba(176,107,255,0.12), rgba(68,136,255,0.08));
-border: 1px solid rgba(176,107,255,0.3);
-border-radius: 16px; padding: 18px; margin-bottom: 12px;
-}
-.onboard-card h3 { font-size: 16px; font-weight: 800; color: var(–purple); margin-bottom: 6px; }
-.onboard-card p { font-size: 13px; color: var(–muted); line-height: 1.5; margin-bottom: 12px; }
+.toast { position:fixed; bottom:100px; left:50%; transform:translateX(-50%) translateY(16px); background:var(--ink); color:var(--lime); font-family:'Cabinet Grotesk',sans-serif; font-weight:800; font-size:14px; padding:12px 22px; border-radius:99px; opacity:0; transition:all 0.3s cubic-bezier(.34,1.56,.64,1); z-index:999; white-space:nowrap; pointer-events:none; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 </style>
-
 </head>
 <body>
 
 <div class="header">
-  <div class="header-left">
-    <h1>Hey Roman 👋</h1>
-    <p id="header-date">Loading...</p>
+  <div>
+    <div class="header-name" id="header-date">Loading...</div>
+    <div class="header-title">Roman's Dashboard</div>
   </div>
-  <div class="streak-badge">🔥 <span id="streak-num">0</span></div>
+  <div class="streak-pill">🔥 <span id="streak-num">0</span></div>
 </div>
 
-<!-- ══════════════ SCREENS ══════════════ -->
-
-<!-- DASHBOARD -->
-
+<!-- ════════ HOME ════════ -->
 <div class="screen active" id="screen-home">
-  <div class="reminder-banner" id="reminder-banner" style="display:none;">
+  <div class="reminder" id="reminder" style="display:none;">
     <div class="reminder-icon">⏰</div>
-    <div class="reminder-text">
-      <h4 id="reminder-title">Time to eat!</h4>
-      <p id="reminder-body">You haven't hit your calories yet.</p>
-    </div>
+    <div><h4 id="reminder-title">Time to eat!</h4><p id="reminder-body">You're behind on calories.</p></div>
   </div>
-
-  <div class="macro-hero">
-    <div class="ring-wrap">
-      <svg width="100" height="100" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="42" fill="none" stroke="#2a2a3a" stroke-width="10"/>
-        <circle cx="50" cy="50" r="42" fill="none" stroke="url(#cg)" stroke-width="10"
-          stroke-dasharray="264" stroke-dashoffset="264" stroke-linecap="round" id="cal-ring"
-          style="transition:stroke-dashoffset 0.8s cubic-bezier(.34,1.56,.64,1)"/>
-        <defs>
-          <linearGradient id="cg" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#00ff88"/><stop offset="100%" stop-color="#4488ff"/>
-          </linearGradient>
-        </defs>
-      </svg>
-      <div class="ring-center">
-        <div class="ring-cal" id="ring-cal">0</div>
-        <div class="ring-label">/ 2700</div>
-      </div>
+  <div class="cal-hero">
+    <div class="cal-hero-top">
+      <div class="cal-hero-label">Today's Calories</div>
+      <div class="cal-hero-date" id="hero-date">—</div>
     </div>
-    <div class="macro-bars">
-      <div class="macro-bar-item">
-        <div class="macro-bar-top"><span class="macro-bar-name">PROTEIN</span><span class="macro-bar-val" style="color:var(--green)" id="bar-p-val">0/130g</span></div>
-        <div class="bar-track"><div class="bar-fill" id="bar-p" style="width:0%;background:var(--green)"></div></div>
+    <div class="cal-ring-row">
+      <div class="ring-wrap">
+        <svg width="90" height="90" viewBox="0 0 90 90">
+          <circle cx="45" cy="45" r="38" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="9"/>
+          <circle cx="45" cy="45" r="38" fill="none" stroke="url(#rg)" stroke-width="9"
+            stroke-dasharray="239" stroke-dashoffset="239" stroke-linecap="round" id="cal-ring"
+            style="transition:stroke-dashoffset 0.8s cubic-bezier(.34,1.56,.64,1)"/>
+          <defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#c8f135"/><stop offset="100%" stop-color="#4a90d9"/>
+          </linearGradient></defs>
+        </svg>
+        <div class="ring-center"><div class="ring-cal" id="ring-cal">0</div><div class="ring-sub">/ 2700</div></div>
       </div>
-      <div class="macro-bar-item">
-        <div class="macro-bar-top"><span class="macro-bar-name">CARBS</span><span class="macro-bar-val" style="color:var(--blue)" id="bar-c-val">0/340g</span></div>
-        <div class="bar-track"><div class="bar-fill" id="bar-c" style="width:0%;background:var(--blue)"></div></div>
-      </div>
-      <div class="macro-bar-item">
-        <div class="macro-bar-top"><span class="macro-bar-name">FAT</span><span class="macro-bar-val" style="color:var(--orange)" id="bar-f-val">0/80g</span></div>
-        <div class="bar-track"><div class="bar-fill" id="bar-f" style="width:0%;background:var(--orange)"></div></div>
+      <div class="macro-bars">
+        <div class="mbar"><div class="mbar-top"><span class="mbar-name">PROTEIN</span><span class="mbar-val" id="bp-val">0/130g</span></div><div class="mbar-track"><div class="mbar-fill" id="bp" style="width:0%;background:#c8f135"></div></div></div>
+        <div class="mbar"><div class="mbar-top"><span class="mbar-name">CARBS</span><span class="mbar-val" id="bc-val">0/340g</span></div><div class="mbar-track"><div class="mbar-fill" id="bc" style="width:0%;background:#4a90d9"></div></div></div>
+        <div class="mbar"><div class="mbar-top"><span class="mbar-name">FAT</span><span class="mbar-val" id="bf-val">0/80g</span></div><div class="mbar-track"><div class="mbar-fill" id="bf" style="width:0%;background:#ff7043"></div></div></div>
       </div>
     </div>
   </div>
-
-  <div class="section-label">Today's <span>Checklist</span></div>
+  <div class="section-head"><h2>Checklist</h2><span>Today</span></div>
   <div class="card" id="checklist-card"></div>
-
-  <div class="section-label">Quick <span>Stats</span></div>
+  <div class="section-head"><h2>Stats</h2><span>Overview</span></div>
   <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-card-label">Weight</div>
-      <div class="stat-card-val" id="stat-weight">—<span class="stat-card-unit">lb</span></div>
-      <div class="stat-card-change" id="stat-weight-change" style="color:var(--muted)">no data yet</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-card-label">Streak</div>
-      <div class="stat-card-val"><span id="stat-streak">0</span><span class="stat-card-unit">days</span></div>
-      <div class="stat-card-change up">keep it going 🔥</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-card-label">Cal Left</div>
-      <div class="stat-card-val" id="stat-cal-left" style="color:var(--green)">2700</div>
-      <div class="stat-card-change" style="color:var(--muted)">target: 2700</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-card-label">Bench 1RM</div>
-      <div class="stat-card-val" id="stat-bench" style="color:var(--purple)">115<span class="stat-card-unit">lb</span></div>
-      <div class="stat-card-change" style="color:var(--muted)">tap strength tab</div>
-    </div>
+    <div class="stat-tile stat-lime"><div class="stat-tile-label">Calories Left</div><div class="stat-tile-val" id="s-cal-left">2700</div><div class="stat-tile-change" style="color:rgba(0,0,0,0.4)">target: 2700</div></div>
+    <div class="stat-tile stat-ink"><div class="stat-tile-label">Streak</div><div class="stat-tile-val" style="color:white"><span id="s-streak">0</span><span class="stat-tile-unit" style="color:rgba(255,255,255,0.4)">d</span></div><div class="stat-tile-change">keep it up 🔥</div></div>
+    <div class="stat-tile"><div class="stat-tile-label">Body Weight</div><div class="stat-tile-val" id="s-weight">—<span class="stat-tile-unit">lb</span></div><div class="stat-tile-change" id="s-weight-ch" style="color:var(--text3)">no data yet</div></div>
+    <div class="stat-tile"><div class="stat-tile-label">Bench 1RM</div><div class="stat-tile-val" style="color:var(--purple)" id="s-bench">115<span class="stat-tile-unit">lb</span></div><div class="stat-tile-change" style="color:var(--text3)">→ strength tab</div></div>
   </div>
 </div>
 
-<!-- FOOD -->
-
+<!-- ════════ FOOD ════════ -->
 <div class="screen" id="screen-food">
-  <div class="section-label">Log <span>Food</span></div>
-  <div class="ai-input-wrap">
-    <div class="ai-input-label">🤖 Tell Bernard what you ate</div>
-    <textarea class="ai-textarea" id="food-input" placeholder="e.g. '4 scrambled eggs, 2 cups oatmeal with milk' or paste nutrition facts label..." rows="3"></textarea>
-    <div class="ai-btns">
-      <button class="btn btn-green" onclick="logFood()">✦ Analyze & Add</button>
+  <div class="section-head"><h2>Food Log</h2><span>Today</span></div>
+  <div class="food-box">
+    <div class="food-box-label">🤖 <span>AI</span> Tell Bernard what you ate</div>
+    <textarea class="food-textarea" id="food-input" placeholder="e.g. 4 scrambled eggs, 2 cups oatmeal with whole milk and a banana..." rows="3"></textarea>
+    <div class="ai-load" id="food-loading"><div class="spin"></div><div class="ai-load-text">Analyzing your food...</div></div>
+    <div class="food-btns">
+      <button class="btn btn-ink" onclick="logFood()">✦ Analyze & Log</button>
       <button class="btn btn-outline" onclick="document.getElementById('food-input').value=''">Clear</button>
     </div>
   </div>
-  <div class="ai-loading" id="food-loading"><div class="spinner"></div>Analyzing your food...</div>
-  <div class="card-title" style="margin-bottom:8px;">QUICK ADD</div>
-  <div class="scroll-x" style="margin-bottom:12px;">
-    <div class="quick-add-chip" onclick="quickAdd('4 scrambled eggs')">🥚 4 Eggs</div>
-    <div class="quick-add-chip" onclick="quickAdd('2 cups oatmeal with whole milk')">🥣 Oatmeal</div>
-    <div class="quick-add-chip" onclick="quickAdd('whey protein shake with whole milk')">🥛 Protein Shake</div>
-    <div class="quick-add-chip" onclick="quickAdd('6oz chicken breast with 2 cups white rice')">🍗 Chicken & Rice</div>
-    <div class="quick-add-chip" onclick="quickAdd('1 cup greek yogurt with granola')">🫙 Greek Yogurt</div>
-    <div class="quick-add-chip" onclick="quickAdd('2 tbsp peanut butter on banana')">🍌 PB Banana</div>
-    <div class="quick-add-chip" onclick="quickAdd('6oz ground beef with pasta')">🥩 Beef & Pasta</div>
+  <div class="card-label" style="margin-bottom:8px;">Quick Add</div>
+  <div class="chips">
+    <div class="chip" onclick="qa('4 scrambled eggs')">🥚 4 Eggs</div>
+    <div class="chip" onclick="qa('2 cups oatmeal with whole milk')">🥣 Oatmeal</div>
+    <div class="chip" onclick="qa('whey protein shake with whole milk')">🥛 Protein Shake</div>
+    <div class="chip" onclick="qa('6oz chicken breast with 2 cups white rice')">🍗 Chicken & Rice</div>
+    <div class="chip" onclick="qa('1 cup greek yogurt with granola')">🫙 Greek Yogurt</div>
+    <div class="chip" onclick="qa('2 tbsp peanut butter on banana')">🍌 PB Banana</div>
+    <div class="chip" onclick="qa('6oz ground beef with pasta')">🥩 Beef & Pasta</div>
+    <div class="chip" onclick="qa('large McDonalds Big Mac meal with fries and coke')">🍔 Big Mac Meal</div>
   </div>
-  <div class="section-label" style="margin-top:8px;">Today's <span>Log</span></div>
+  <div class="section-head"><h2>Today's Log</h2></div>
   <div class="card" id="food-log-card">
-    <div id="food-log-empty" style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">No food logged yet.<br>Tell me what you ate above! 👆</div>
-    <div id="food-log-list"></div>
+    <div class="food-empty" id="food-empty">Nothing logged yet.<br>Tell me what you ate above 👆</div>
+    <div id="food-list"></div>
   </div>
 </div>
 
-<!-- STRENGTH -->
-
+<!-- ════════ STRENGTH ════════ -->
 <div class="screen" id="screen-strength">
-  <div class="section-label">Strength <span>Tracker</span></div>
-
-  <div class="onboard-card" id="onboard-card">
+  <div class="section-head"><h2>Strength</h2><span>Tracker</span></div>
+  <div class="onboard" id="onboard">
     <h3>💡 How this works</h3>
-    <p>I estimated your starting weights from your 115lb bench. Each session shows you the exact weight and reps. When you hit the top rep on every set, I'll tell you to add 5 lbs next session. Update your 1RM anytime.</p>
-    <button class="btn btn-purple" onclick="document.getElementById('onboard-card').style.display='none'" style="width:100%">Got it, let's go</button>
+    <p>Weights are calculated from your 115lb bench. Tap a lift to see exact weights + warm-ups. Check off each set. Hit the top rep on all sets → I'll tell you to add weight.</p>
+    <button class="btn btn-outline" onclick="document.getElementById('onboard').style.display='none'" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.2);color:white;">Got it →</button>
   </div>
-
-  <div class="progress-rule">
-    <h4>📐 The Rule: Double Progression</h4>
-    <p>Start at the low end of the rep range. Add 1 rep per set each session. When you hit the TOP rep on ALL sets → add 5 lbs next session. This is how you get stronger every week.</p>
+  <div class="rule-card">
+    <h4>📐 Double Progression Rule</h4>
+    <p>Start at the LOW end of the rep range. Add 1 rep per set each session. Hit the TOP rep on ALL sets → add 5 lbs next session. Repeat forever.</p>
   </div>
-
   <div id="strength-list"></div>
 </div>
 
-<!-- WORKOUT -->
+<!-- ════════ PLAN ════════ -->
+<div class="screen" id="screen-plan">
+  <div class="section-head"><h2>Weekly Plan</h2><span>Barbell + DB Split</span></div>
 
-<div class="screen" id="screen-workout">
-  <div class="section-label">This <span>Week</span></div>
+  <div class="day-card">
+    <div class="day-hdr" onclick="this.nextElementSibling.classList.toggle('open')">
+      <div class="day-hdr-left"><div class="day-title">Monday — Upper A</div><div class="day-sub">Chest, Back, Shoulders, Arms</div></div>
+      <div class="day-tag tag-push">Push</div>
+    </div>
+    <div class="day-body">
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">Barbell Bench Press</div><div class="ex-nt">Primary chest mass builder</div></div><div class="ex-sets">4×6-8</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">Barbell Row</div><div class="ex-nt">Full upper back thickness</div></div><div class="ex-sets">4×6-8</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">Barbell Overhead Press</div><div class="ex-nt">Shoulder width + size</div></div><div class="ex-sets">3×8-10</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">DB Incline Press</div><div class="ex-nt">Upper chest — the shelf look</div></div><div class="ex-sets">3×8-12</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">DB Lateral Raises</div><div class="ex-nt">Shoulder width — key for aesthetics</div></div><div class="ex-sets">4×15-20</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">DB Curl</div><div class="ex-nt">Bicep size + peak</div></div><div class="ex-sets">3×10-12</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">Close-Grip Bench Press</div><div class="ex-nt">Tricep mass — 2/3 of arm size</div></div><div class="ex-sets">3×8-10</div></div>
+    </div>
+  </div>
 
-  <div class="workout-day">
-    <div class="workout-day-header" onclick="this.nextElementSibling.classList.toggle('open')">
-      <div><div class="workout-day-title">Monday — Upper A</div><div class="workout-day-sub">Push Focus · 6 exercises</div></div>
-      <div class="workout-tag tag-push">PUSH</div>
+  <div class="day-card">
+    <div class="day-hdr" onclick="this.nextElementSibling.classList.toggle('open')">
+      <div class="day-hdr-left"><div class="day-title">Tuesday — Lower A</div><div class="day-sub">Quads, Hamstrings, Calves</div></div>
+      <div class="day-tag tag-legs">Legs</div>
     </div>
-    <div class="workout-day-body">
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Barbell Bench Press</div><div class="ex-s">Control the descent · feel the chest stretch</div></div><div class="ex-sets-tag">4×6-8</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Pendlay Row</div><div class="ex-s">Pull to belly button · full upper back</div></div><div class="ex-sets-tag">4×6-8</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Overhead Press</div><div class="ex-s">Core tight · no lean-back</div></div><div class="ex-sets-tag">3×8-10</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Lat Pulldown / Pull-Ups</div><div class="ex-s">V-taper builder · full stretch at top</div></div><div class="ex-sets-tag">3×8-12</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Incline DB Curl</div><div class="ex-s">Long head stretch = more peak</div></div><div class="ex-sets-tag">3×10-12</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Tricep Pushdowns</div><div class="ex-s">2/3 of arm size · full lockout</div></div><div class="ex-sets-tag">3×10-15</div></div>
-    </div>
-  </div>
-  <div class="workout-day">
-    <div class="workout-day-header" onclick="this.nextElementSibling.classList.toggle('open')">
-      <div><div class="workout-day-title">Tuesday — Lower A</div><div class="workout-day-sub">Quad Focus · 5 exercises</div></div>
-      <div class="workout-tag tag-legs">LEGS</div>
-    </div>
-    <div class="workout-day-body">
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Barbell Back Squat</div><div class="ex-s">At least parallel · core braced</div></div><div class="ex-sets-tag">4×6-8</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Romanian Deadlift</div><div class="ex-s">Hinge at hips · feel the hamstring stretch</div></div><div class="ex-sets-tag">3×8-10</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Leg Press</div><div class="ex-s">Full range of motion · no half reps</div></div><div class="ex-sets-tag">3×10-12</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Leg Curl</div><div class="ex-s">Control the return · don't slam it</div></div><div class="ex-sets-tag">3×10-12</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Standing Calf Raise</div><div class="ex-s">Full stretch at bottom · pause at top</div></div><div class="ex-sets-tag">4×15-20</div></div>
+    <div class="day-body">
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">Barbell Back Squat</div><div class="ex-nt">King of leg exercises</div></div><div class="ex-sets">4×6-8</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">Romanian Deadlift</div><div class="ex-nt">Hamstring + glute stretch</div></div><div class="ex-sets">3×8-10</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">DB Bulgarian Split Squat</div><div class="ex-nt">Quad + glute isolation</div></div><div class="ex-sets">3×8-10ea</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">DB Stiff-Leg Deadlift</div><div class="ex-nt">Hamstring isolation finisher</div></div><div class="ex-sets">3×10-12</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">Standing Calf Raise (BB)</div><div class="ex-nt">Bar on traps, full stretch at bottom</div></div><div class="ex-sets">4×15-20</div></div>
     </div>
   </div>
-  <div class="workout-day">
-    <div class="workout-day-header" onclick="this.nextElementSibling.classList.toggle('open')">
-      <div><div class="workout-day-title">Wednesday</div><div class="workout-day-sub">Rest & Recover</div></div>
-      <div class="workout-tag tag-rest">REST</div>
+
+  <div class="day-card">
+    <div class="day-hdr" onclick="this.nextElementSibling.classList.toggle('open')">
+      <div class="day-hdr-left"><div class="day-title">Wednesday</div><div class="day-sub">Rest & Recover</div></div>
+      <div class="day-tag tag-rest">Rest</div>
     </div>
-    <div class="workout-day-body"><div style="padding:16px;text-align:center;color:var(--muted);font-size:13px;">🔋 Active recovery. Eat your calories. Sleep 8–9 hrs.</div></div>
+    <div class="day-body"><div style="padding:18px;text-align:center;color:var(--text3);font-size:13px;font-weight:500;">🔋 Active recovery only. Eat your calories. Sleep 8–9 hrs. This is when you actually grow.</div></div>
   </div>
-  <div class="workout-day">
-    <div class="workout-day-header" onclick="this.nextElementSibling.classList.toggle('open')">
-      <div><div class="workout-day-title">Thursday — Upper B</div><div class="workout-day-sub">Pull Focus · 6 exercises</div></div>
-      <div class="workout-tag tag-pull">PULL</div>
+
+  <div class="day-card">
+    <div class="day-hdr" onclick="this.nextElementSibling.classList.toggle('open')">
+      <div class="day-hdr-left"><div class="day-title">Thursday — Upper B</div><div class="day-sub">Back, Chest, Shoulders, Arms</div></div>
+      <div class="day-tag tag-pull">Pull</div>
     </div>
-    <div class="workout-day-body">
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Pull-Ups</div><div class="ex-s">Dead hang to chin over bar</div></div><div class="ex-sets-tag">4×6-10</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Incline DB Press</div><div class="ex-s">Upper chest · 30-45 degree angle</div></div><div class="ex-sets-tag">4×8-10</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Seated Cable Row</div><div class="ex-s">Squeeze shoulder blades at end</div></div><div class="ex-sets-tag">3×10-12</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Lateral Raises</div><div class="ex-s">Width builder · go lighter than you think</div></div><div class="ex-sets-tag">4×15-20</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">EZ-Bar Curl</div><div class="ex-s">Full extension at bottom matters</div></div><div class="ex-sets-tag">3×10-12</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Overhead Tricep Extension</div><div class="ex-s">Long head stretch = full development</div></div><div class="ex-sets-tag">3×10-12</div></div>
-    </div>
-  </div>
-  <div class="workout-day">
-    <div class="workout-day-header" onclick="this.nextElementSibling.classList.toggle('open')">
-      <div><div class="workout-day-title">Friday — Lower B</div><div class="workout-day-sub">Posterior Focus · 5 exercises</div></div>
-      <div class="workout-tag tag-legs">LEGS</div>
-    </div>
-    <div class="workout-day-body">
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Conventional Deadlift</div><div class="ex-s">Hips back · chest up · bar drags shins</div></div><div class="ex-sets-tag">4×4-6</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Bulgarian Split Squat</div><div class="ex-s">Rear foot elevated · brutal but worth it</div></div><div class="ex-sets-tag">3×8-10ea</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Hip Thrust</div><div class="ex-s">Squeeze hard at top for 1 sec</div></div><div class="ex-sets-tag">3×12-15</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Leg Extension</div><div class="ex-s">Quad isolation · control at full extension</div></div><div class="ex-sets-tag">3×12-15</div></div>
-      <div class="ex-item"><div class="ex-check" onclick="toggleEx(this)"></div><div class="ex-details"><div class="ex-n">Seated Calf Raise</div><div class="ex-s">Hits soleus (lower calf) · full stretch</div></div><div class="ex-sets-tag">4×15-20</div></div>
+    <div class="day-body">
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">Pull-Ups</div><div class="ex-nt">Best V-taper builder — do these weighted when easy</div></div><div class="ex-sets">4×6-10</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">DB Bent-Over Row</div><div class="ex-nt">Lat + mid-back thickness</div></div><div class="ex-sets">4×8-10ea</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">DB Incline Press</div><div class="ex-nt">Upper chest + front delt</div></div><div class="ex-sets">3×10-12</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">DB Lateral Raises</div><div class="ex-nt">Shoulder width — go lighter, feel the burn</div></div><div class="ex-sets">4×15-20</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">DB Incline Curl</div><div class="ex-nt">Long head stretch = better peak</div></div><div class="ex-sets">3×10-12</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">DB Overhead Tricep Extension</div><div class="ex-nt">Long head — most of the tricep</div></div><div class="ex-sets">3×10-12</div></div>
     </div>
   </div>
-  <div class="workout-day">
-    <div class="workout-day-header" onclick="this.nextElementSibling.classList.toggle('open')">
-      <div><div class="workout-day-title">Sat — Sun</div><div class="workout-day-sub">Full Rest Weekend</div></div>
-      <div class="workout-tag tag-rest">REST</div>
+
+  <div class="day-card">
+    <div class="day-hdr" onclick="this.nextElementSibling.classList.toggle('open')">
+      <div class="day-hdr-left"><div class="day-title">Friday — Lower B</div><div class="day-sub">Posterior Chain, Glutes, Calves</div></div>
+      <div class="day-tag tag-legs">Legs</div>
     </div>
-    <div class="workout-day-body"><div style="padding:16px;text-align:center;color:var(--muted);font-size:13px;">🌙 Full rest. Eat big, sleep big. Growth happens here.</div></div>
+    <div class="day-body">
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">Conventional Deadlift</div><div class="ex-nt">Most muscle mass of any exercise</div></div><div class="ex-sets">4×4-6</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">DB Bulgarian Split Squat</div><div class="ex-nt">Unilateral quad + glute</div></div><div class="ex-sets">3×8-10ea</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">Barbell Hip Thrust (on bench)</div><div class="ex-nt">Glute isolation — squeeze at top</div></div><div class="ex-sets">3×12-15</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">DB Goblet Squat</div><div class="ex-nt">Quad finisher — deep range of motion</div></div><div class="ex-sets">3×12-15</div></div>
+      <div class="ex-row"><div class="ex-chk" onclick="toggleEx(this)"></div><div class="ex-det"><div class="ex-nm">Single-Leg Calf Raise (off plate)</div><div class="ex-nt">More stretch = more growth</div></div><div class="ex-sets">4×15-20ea</div></div>
+    </div>
+  </div>
+
+  <div class="day-card">
+    <div class="day-hdr" onclick="this.nextElementSibling.classList.toggle('open')">
+      <div class="day-hdr-left"><div class="day-title">Sat — Sun</div><div class="day-sub">Full Rest Weekend</div></div>
+      <div class="day-tag tag-rest">Rest</div>
+    </div>
+    <div class="day-body"><div style="padding:18px;text-align:center;color:var(--text3);font-size:13px;font-weight:500;">🌙 Eat big, sleep big. Muscle is built during rest, not during training.</div></div>
   </div>
 </div>
 
-<!-- WEIGHT SCREEN -->
+<!-- ════════ HOW-TO ════════ -->
+<div class="screen" id="screen-howto">
+  <div class="section-head"><h2>Exercise</h2><span>Guides</span></div>
 
-<div class="screen" id="screen-weight">
-  <div class="section-label">Weight <span>Tracker</span></div>
-  <div class="card">
-    <div class="card-title">LOG TODAY'S WEIGHT</div>
-    <div class="weight-input-row">
-      <input class="weight-input" type="number" id="weight-input" placeholder="e.g. 130.2" step="0.1" min="80" max="300">
-      <button class="btn btn-green" onclick="logWeight()" style="flex-shrink:0;">+ Log</button>
+  <div class="card" style="background:var(--ink);border-color:var(--ink);margin-bottom:16px;">
+    <div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;font-weight:500;">
+      Tap any exercise to see exactly how to do it safely — proper form, common mistakes, and why it builds muscle.
     </div>
   </div>
-  <div class="card">
-    <div class="card-title">PROGRESS (lbs)</div>
-    <canvas id="weightChart" height="160"></canvas>
-    <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:8px;" id="weight-chart-empty">Log your first two weights to see a chart</div>
+
+  <!-- UPPER A -->
+  <div class="howto-day-card">
+    <div class="howto-day-hdr" onclick="this.nextElementSibling.classList.toggle('open')">
+      <div><div class="howto-day-title">Monday — Upper A</div><div class="howto-day-sub">7 exercises</div></div>
+      <div class="day-tag tag-push">Push</div>
+    </div>
+    <div class="howto-day-body">
+      <div class="howto-ex-row" onclick="showEx('bench')"><div class="howto-ex-icon">🏋️</div><div class="howto-ex-info"><div class="howto-ex-name">Barbell Bench Press</div><div class="howto-ex-muscle">Chest · Triceps · Front Delt</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('bbrow')"><div class="howto-ex-icon">🔙</div><div class="howto-ex-info"><div class="howto-ex-name">Barbell Row</div><div class="howto-ex-muscle">Lats · Mid Back · Biceps</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('ohp')"><div class="howto-ex-icon">🔼</div><div class="howto-ex-info"><div class="howto-ex-name">Barbell Overhead Press</div><div class="howto-ex-muscle">Shoulders · Triceps · Upper Chest</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('dbincline')"><div class="howto-ex-icon">↗️</div><div class="howto-ex-info"><div class="howto-ex-name">DB Incline Press</div><div class="howto-ex-muscle">Upper Chest · Front Delt</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('lateral')"><div class="howto-ex-icon">↔️</div><div class="howto-ex-info"><div class="howto-ex-name">DB Lateral Raises</div><div class="howto-ex-muscle">Side Delt — width builder</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('dbcurl')"><div class="howto-ex-icon">💪</div><div class="howto-ex-info"><div class="howto-ex-name">DB Curl</div><div class="howto-ex-muscle">Biceps</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('cgbench')"><div class="howto-ex-icon">💪</div><div class="howto-ex-info"><div class="howto-ex-name">Close-Grip Bench Press</div><div class="howto-ex-muscle">Triceps · Inner Chest</div></div><div class="howto-arrow">›</div></div>
+    </div>
   </div>
-  <div class="card">
-    <div class="card-title">LOG HISTORY</div>
-    <div id="weight-log-list" style="color:var(--muted);font-size:13px;text-align:center;padding:10px;">No entries yet.</div>
+
+  <!-- LOWER A -->
+  <div class="howto-day-card">
+    <div class="howto-day-hdr" onclick="this.nextElementSibling.classList.toggle('open')">
+      <div><div class="howto-day-title">Tuesday — Lower A</div><div class="howto-day-sub">5 exercises</div></div>
+      <div class="day-tag tag-legs">Legs</div>
+    </div>
+    <div class="howto-day-body">
+      <div class="howto-ex-row" onclick="showEx('squat')"><div class="howto-ex-icon">🦵</div><div class="howto-ex-info"><div class="howto-ex-name">Barbell Back Squat</div><div class="howto-ex-muscle">Quads · Glutes · Hamstrings</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('rdl')"><div class="howto-ex-icon">🔽</div><div class="howto-ex-info"><div class="howto-ex-name">Romanian Deadlift</div><div class="howto-ex-muscle">Hamstrings · Glutes · Lower Back</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('bss')"><div class="howto-ex-icon">🦵</div><div class="howto-ex-info"><div class="howto-ex-name">DB Bulgarian Split Squat</div><div class="howto-ex-muscle">Quads · Glutes · Balance</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('dbsldl')"><div class="howto-ex-icon">🔽</div><div class="howto-ex-info"><div class="howto-ex-name">DB Stiff-Leg Deadlift</div><div class="howto-ex-muscle">Hamstrings · Glutes</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('calfbb')"><div class="howto-ex-icon">🦶</div><div class="howto-ex-info"><div class="howto-ex-name">Standing Calf Raise (BB)</div><div class="howto-ex-muscle">Gastrocnemius (upper calf)</div></div><div class="howto-arrow">›</div></div>
+    </div>
+  </div>
+
+  <!-- UPPER B -->
+  <div class="howto-day-card">
+    <div class="howto-day-hdr" onclick="this.nextElementSibling.classList.toggle('open')">
+      <div><div class="howto-day-title">Thursday — Upper B</div><div class="howto-day-sub">6 exercises</div></div>
+      <div class="day-tag tag-pull">Pull</div>
+    </div>
+    <div class="howto-day-body">
+      <div class="howto-ex-row" onclick="showEx('pullup')"><div class="howto-ex-icon">⬆️</div><div class="howto-ex-info"><div class="howto-ex-name">Pull-Ups</div><div class="howto-ex-muscle">Lats · Biceps · Upper Back</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('dbbentrow')"><div class="howto-ex-icon">🔙</div><div class="howto-ex-info"><div class="howto-ex-name">DB Bent-Over Row</div><div class="howto-ex-muscle">Lats · Mid Back · Rear Delt</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('dbincline')"><div class="howto-ex-icon">↗️</div><div class="howto-ex-info"><div class="howto-ex-name">DB Incline Press</div><div class="howto-ex-muscle">Upper Chest · Front Delt</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('lateral')"><div class="howto-ex-icon">↔️</div><div class="howto-ex-info"><div class="howto-ex-name">DB Lateral Raises</div><div class="howto-ex-muscle">Side Delt — width builder</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('inclinecurl')"><div class="howto-ex-icon">💪</div><div class="howto-ex-info"><div class="howto-ex-name">DB Incline Curl</div><div class="howto-ex-muscle">Bicep Long Head — peak builder</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('dbohtext')"><div class="howto-ex-icon">💪</div><div class="howto-ex-info"><div class="howto-ex-name">DB Overhead Tricep Extension</div><div class="howto-ex-muscle">Tricep Long Head</div></div><div class="howto-arrow">›</div></div>
+    </div>
+  </div>
+
+  <!-- LOWER B -->
+  <div class="howto-day-card">
+    <div class="howto-day-hdr" onclick="this.nextElementSibling.classList.toggle('open')">
+      <div><div class="howto-day-title">Friday — Lower B</div><div class="howto-day-sub">5 exercises</div></div>
+      <div class="day-tag tag-legs">Legs</div>
+    </div>
+    <div class="howto-day-body">
+      <div class="howto-ex-row" onclick="showEx('deadlift')"><div class="howto-ex-icon">⚡</div><div class="howto-ex-info"><div class="howto-ex-name">Conventional Deadlift</div><div class="howto-ex-muscle">Full Posterior Chain + Quads</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('bss')"><div class="howto-ex-icon">🦵</div><div class="howto-ex-info"><div class="howto-ex-name">DB Bulgarian Split Squat</div><div class="howto-ex-muscle">Quads · Glutes · Balance</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('hipthrust')"><div class="howto-ex-icon">🍑</div><div class="howto-ex-info"><div class="howto-ex-name">Barbell Hip Thrust</div><div class="howto-ex-muscle">Glutes — best glute exercise</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('goblet')"><div class="howto-ex-icon">🏋️</div><div class="howto-ex-info"><div class="howto-ex-name">DB Goblet Squat</div><div class="howto-ex-muscle">Quads · Core</div></div><div class="howto-arrow">›</div></div>
+      <div class="howto-ex-row" onclick="showEx('slcalf')"><div class="howto-ex-icon">🦶</div><div class="howto-ex-info"><div class="howto-ex-name">Single-Leg Calf Raise</div><div class="howto-ex-muscle">Gastrocnemius · Soleus</div></div><div class="howto-arrow">›</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ WEIGHT ════════ -->
+<div class="screen" id="screen-weight">
+  <div class="section-head"><h2>Weight</h2><span>Tracker</span></div>
+  <div class="card"><div class="card-label">Log Today's Weight</div>
+    <div class="w-inp-row">
+      <input class="w-inp" type="number" id="w-inp" placeholder="e.g. 130.5" step="0.1" min="80" max="400">
+      <button class="btn btn-ink" onclick="logWeight()" style="flex-shrink:0;padding:13px 20px;">+ Log</button>
+    </div>
+  </div>
+  <div class="card"><div class="card-label">Progress Chart</div>
+    <canvas id="wChart" height="150"></canvas>
+    <div class="chart-empty" id="chart-empty">Log your first two weights to see your chart 📈</div>
+  </div>
+  <div class="card"><div class="card-label">History</div>
+    <div id="wlog-list"><div class="chart-empty">No entries yet.</div></div>
   </div>
 </div>
 
 <!-- BOTTOM NAV -->
-
 <div class="bottom-nav">
   <button class="nav-btn active" onclick="showScreen('home',this)"><span class="nav-icon">⚡</span>Home</button>
   <button class="nav-btn" onclick="showScreen('food',this)"><span class="nav-icon">🍽️</span>Food</button>
   <button class="nav-btn" onclick="showScreen('strength',this)"><span class="nav-icon">🏋️</span>Strength</button>
-  <button class="nav-btn" onclick="showScreen('workout',this)"><span class="nav-icon">📋</span>Plan</button>
+  <button class="nav-btn" onclick="showScreen('plan',this)"><span class="nav-icon">📋</span>Plan</button>
+  <button class="nav-btn" onclick="showScreen('howto',this)"><span class="nav-icon">📖</span>How-To</button>
   <button class="nav-btn" onclick="showScreen('weight',this)"><span class="nav-icon">📈</span>Weight</button>
 </div>
 
-<!-- 1RM UPDATE MODAL -->
-
-<div class="modal-overlay" id="orm-modal">
-  <div class="modal">
-    <h3>Update <span id="modal-lift-name" style="color:var(--purple)">Bench</span></h3>
-    <p>Enter your current 1 rep max (the most you can lift once). If you don't know it exactly, enter the most you've done for 3–5 reps and I'll estimate.</p>
-    <input class="modal-input" type="number" id="modal-orm-input" placeholder="e.g. 135" min="20" max="600">
-    <div style="font-size:11px;color:var(--muted);margin-bottom:12px;" id="modal-estimate-note"></div>
-    <div class="modal-btns">
-      <button class="btn btn-outline" onclick="closeModal()" style="flex:1;">Cancel</button>
-      <button class="btn btn-purple" onclick="saveOrm()" style="flex:1;justify-content:center;">Save</button>
+<!-- EXERCISE DETAIL MODAL -->
+<div class="ex-modal-bg" id="ex-modal-bg" onclick="closeEx(event)">
+  <div class="ex-modal" id="ex-modal">
+    <div class="ex-modal-hero">
+      <button class="ex-modal-close" onclick="closeExBtn()">×</button>
+      <div class="ex-modal-icon" id="em-icon">🏋️</div>
+      <div class="ex-modal-name" id="em-name">Exercise</div>
+      <div class="ex-modal-muscle" id="em-muscle">Muscles</div>
     </div>
+    <div class="ex-modal-body" id="em-body"></div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════
-// LIFT DEFINITIONS
-// Using bench 115 as anchor, estimate others via typical ratios
-// ══════════════════════════════════════════
-const LIFT_DEFS = [
-  {
-    id: 'bench', name: 'Bench Press', icon: '🏋️', category: 'Upper A / Upper B',
-    sets: 4, repLow: 6, repHigh: 8, increment: 5,
-    warmupPct: [0.4, 0.6, 0.8], // warm-up sets as % of working weight
-    note: 'Control descent 2-3 sec. Slight arch, feet flat.',
-    estimateFrom: null, ratio: 1.0
+// ══════════════════════════════
+// EXERCISE DATABASE
+// ══════════════════════════════
+const EXERCISES = {
+  bench: {
+    name:'Barbell Bench Press', icon:'🏋️', muscle:'Chest · Triceps · Front Delt',
+    why:'The bench press is the #1 chest builder because it allows maximum loading with a full stretch at the bottom and full contraction at the top. It hits the pecs, triceps, and front delts — the core of an aesthetic upper body.',
+    sets:'4 sets × 6–8 reps', equipment:'Barbell + Bench + Rack',
+    steps:[
+      'Set the bar at roughly eye level in the rack. Lie on the bench with eyes directly under the bar.',
+      'Grip the bar slightly wider than shoulder-width — about where your forearms go vertical when the bar touches your chest.',
+      'Pull your shoulder blades together and down, creating a slight arch in your lower back. Feet flat on the floor.',
+      'Unrack the bar and hold it directly over your chest with arms locked.',
+      'Lower the bar slowly (2–3 seconds) to your lower chest/nipple line. Let it touch lightly.',
+      'Press back up explosively in a slight arc — imagine pressing the bar back toward the rack slightly.',
+      'Lock out at the top but don\'t completely relax — keep tension in your chest.',
+    ],
+    tips:[
+      {icon:'✅', text:'Keep your shoulder blades pinched together the entire set — this protects your shoulders.'},
+      {icon:'✅', text:'Drive your feet into the floor and squeeze your glutes for full-body tightness.'},
+      {icon:'✅', text:'The bar path should be a slight diagonal, not straight up and down.'},
+    ],
+    mistakes:[
+      'Flaring elbows out 90 degrees — keep them at about 45-75 degrees from your body.',
+      'Bouncing the bar off your chest — touch and press, don\'t bounce.',
+      'Lifting your butt off the bench — kills stability and is a form cheat.',
+      'Going too heavy with bad form — ego lift = shoulder injury.',
+    ]
   },
-  {
-    id: 'ohp', name: 'Overhead Press', icon: '🔼', category: 'Upper A',
-    sets: 3, repLow: 8, repHigh: 10, increment: 5,
-    note: 'Core tight, no lean-back. Bar from front rack.',
-    estimateFrom: 'bench', ratio: 0.62
+  bbrow: {
+    name:'Barbell Row', icon:'🔙', muscle:'Lats · Mid Back · Biceps · Rear Delt',
+    why:'The barbell row builds the thickness of your entire back. A thick back is what separates a good physique from a great one — it creates that 3D look from the side.',
+    sets:'4 sets × 6–8 reps', equipment:'Barbell + Plates',
+    steps:[
+      'Set the bar on the floor or in the rack at mid-shin height. Stand with feet hip-width apart.',
+      'Hinge at your hips until your torso is about 45-60 degrees from the floor. Slight bend in knees.',
+      'Grip the bar slightly wider than shoulder-width, overhand grip.',
+      'Keep your back flat and core tight — don\'t let your lower back round.',
+      'Pull the bar toward your belly button, driving your elbows back and up.',
+      'Squeeze your shoulder blades together at the top for 1 second.',
+      'Lower the bar back down with control — don\'t just drop it.',
+    ],
+    tips:[
+      {icon:'✅', text:'Think "elbows to the ceiling" rather than "pull the bar up."'},
+      {icon:'✅', text:'Keep your head neutral — don\'t crane your neck up or down.'},
+      {icon:'✅', text:'Brace your core like you\'re about to take a punch before each rep.'},
+    ],
+    mistakes:[
+      'Rounding the lower back — this is how you get injured. Hinge properly.',
+      'Using momentum to jerk the bar up — control the weight.',
+      'Pulling to the chest instead of the belly — hits the wrong muscles.',
+      'Standing too upright — you need the hinge to target the lats properly.',
+    ]
   },
-  {
-    id: 'row', name: 'Pendlay Row', icon: '🔙', category: 'Upper A',
-    sets: 4, repLow: 6, repHigh: 8, increment: 5,
-    note: 'Pull bar to belly button. Reset on floor each rep.',
-    estimateFrom: 'bench', ratio: 0.85
+  ohp: {
+    name:'Barbell Overhead Press', icon:'🔼', muscle:'Shoulders · Triceps · Upper Traps',
+    why:'The OHP is the foundation of shoulder development. It hits all three delt heads with emphasis on the front and side — exactly what you need for wide, capped shoulders that look aesthetic from every angle.',
+    sets:'3 sets × 8–10 reps', equipment:'Barbell + Rack',
+    steps:[
+      'Set the bar in the rack at upper chest height. Grip just outside shoulder width.',
+      'Get under the bar with it resting on your upper chest/front delts, not your hands.',
+      'Unrack and step back. Feet shoulder-width, slight bend in knees.',
+      'Brace your core hard — imagine you\'re about to do a plank.',
+      'Press the bar straight up, slightly back at the top so it ends over your ears/head.',
+      'As you press, move your head back slightly to let the bar clear your chin.',
+      'Lower back down to your upper chest with control.',
+    ],
+    tips:[
+      {icon:'✅', text:'Squeeze your glutes and abs the entire time — this keeps you from leaning back.'},
+      {icon:'✅', text:'At the top, shrug your traps up slightly — this protects the shoulder joint.'},
+      {icon:'✅', text:'Think about pushing your HEAD through the bar at the top, not pushing the bar away.'},
+    ],
+    mistakes:[
+      'Excessive lean-back — turns it into an incline press and stresses the lower back.',
+      'Bar path going too far forward — the bar should stay over your center of gravity.',
+      'Not bracing your core — without this, all the force goes into your lower back.',
+      'Pressing with a wide grip — keep it just outside shoulder-width.',
+    ]
   },
-  {
-    id: 'lat', name: 'Lat Pulldown', icon: '⬇️', category: 'Upper A / Upper B',
-    sets: 3, repLow: 8, repHigh: 12, increment: 5,
-    note: 'Full stretch at top. Squeeze lats at bottom.',
-    estimateFrom: 'bench', ratio: 0.75
+  dbincline: {
+    name:'DB Incline Press', icon:'↗️', muscle:'Upper Chest · Front Delt · Triceps',
+    why:'The upper chest is the most visible part of your chest and what creates that "shelf" look. The incline angle specifically targets the clavicular head of the pec — this is what separates a flat chest from an aesthetic one.',
+    sets:'3–4 sets × 8–12 reps', equipment:'Dumbbells + Adjustable Bench',
+    steps:[
+      'Set the bench to 30–45 degrees. Any higher and it becomes a shoulder exercise.',
+      'Sit on the bench, dumbbells resting on your thighs. Use your knees to kick them up as you lie back.',
+      'Hold the DBs at chest level, elbows at about 60 degrees from your body.',
+      'Press up and slightly inward — at the top the DBs should be close but not touching.',
+      'Lower slowly until you feel a full stretch in your upper chest.',
+      'Press back up powerfully. Don\'t lock out completely — keep tension in the chest.',
+    ],
+    tips:[
+      {icon:'✅', text:'The stretch at the bottom is where the growth happens — don\'t cut it short.'},
+      {icon:'✅', text:'30 degrees is better than 45 for upper chest — most people set it too high.'},
+      {icon:'✅', text:'Squeeze your pecs at the top like you\'re trying to crack a walnut between them.'},
+    ],
+    mistakes:[
+      'Setting the bench too high — 45+ degrees shifts the work to shoulders.',
+      'Flaring elbows out too wide — puts stress on the shoulder joint.',
+      'Dropping the DBs too fast — you lose the eccentric (lowering) stimulus.',
+      'Not getting a full stretch at the bottom — half reps = half results.',
+    ]
   },
-  {
-    id: 'squat', name: 'Back Squat', icon: '🦵', category: 'Lower A',
-    sets: 4, repLow: 6, repHigh: 8, increment: 5,
-    note: 'At least parallel depth. Core braced throughout.',
-    estimateFrom: 'bench', ratio: 1.25
+  lateral: {
+    name:'DB Lateral Raises', icon:'↔️', muscle:'Side Deltoid — the width muscle',
+    why:'Lateral raises are the #1 exercise for shoulder WIDTH. The side delts are what make your shoulders look broad and create the V-taper that\'s the hallmark of an aesthetic physique. You cannot replace this movement.',
+    sets:'4 sets × 15–20 reps', equipment:'Dumbbells',
+    steps:[
+      'Stand with DBs at your sides, slight bend in elbows, feet shoulder-width.',
+      'Lean forward very slightly — about 10-15 degrees. This keeps tension on the side delt.',
+      'Raise the DBs out to the side until your arms are parallel to the floor.',
+      'At the top, tilt the front of the DB slightly down — like pouring a pitcher of water.',
+      'Lower SLOWLY — take 2-3 seconds coming down. The lowering builds as much muscle as the raise.',
+      'Don\'t let the DBs touch your thighs at the bottom — keep constant tension.',
+    ],
+    tips:[
+      {icon:'✅', text:'Go LIGHTER than you think — most people go too heavy and use traps instead of side delts.'},
+      {icon:'✅', text:'The "pouring pitcher" wrist position at the top maximizes side delt activation.'},
+      {icon:'✅', text:'The slow lowering (eccentric) is where most of the muscle damage and growth happens.'},
+    ],
+    mistakes:[
+      'Going too heavy and shrugging — the traps take over and the side delts get nothing.',
+      'Raising the arms too high — past parallel the traps take over.',
+      'Dropping the weight fast — you\'re throwing away 50% of the stimulus.',
+      'Standing completely upright — a slight forward lean keeps tension on the right muscle.',
+    ]
   },
-  {
-    id: 'rdl', name: 'Romanian Deadlift', icon: '🔽', category: 'Lower A',
-    sets: 3, repLow: 8, repHigh: 10, increment: 5,
-    note: 'Hinge at hips. Feel the hamstring stretch.',
-    estimateFrom: 'bench', ratio: 1.1
+  dbcurl: {
+    name:'DB Curl', icon:'💪', muscle:'Biceps Brachii · Brachialis',
+    why:'Dumbbell curls allow each arm to work independently which fixes imbalances, and the rotation of the wrist (supination) at the top activates the bicep fully. Essential for arm aesthetics.',
+    sets:'3 sets × 10–12 reps', equipment:'Dumbbells',
+    steps:[
+      'Stand holding DBs at your sides, palms facing inward (hammer grip) to start.',
+      'Keep elbows pinned to your sides — they should NOT move forward during the curl.',
+      'As you curl up, rotate your wrist outward (supinate) so your palm faces the ceiling at the top.',
+      'Squeeze hard at the top for 1 second.',
+      'Lower slowly — 2-3 seconds. Feel the stretch at the bottom.',
+      'Alternate arms or do both together — both work fine.',
+    ],
+    tips:[
+      {icon:'✅', text:'The supination (wrist rotation) at the top is critical — it\'s what fully activates the bicep.'},
+      {icon:'✅', text:'Full extension at the bottom is just as important as the peak contraction at the top.'},
+      {icon:'✅', text:'If you\'re swinging your body, the weight is too heavy — drop it.'},
+    ],
+    mistakes:[
+      'Swinging your body to generate momentum — this removes the load from the bicep.',
+      'Not fully extending at the bottom — you\'re skipping the stretch that causes growth.',
+      'Letting elbows drift forward — this makes it easier but reduces bicep activation.',
+      'Going too fast — the muscle grows from time under tension, not from speed.',
+    ]
   },
-  {
-    id: 'deadlift', name: 'Deadlift', icon: '⚡', category: 'Lower B',
-    sets: 4, repLow: 4, repHigh: 6, increment: 5,
-    note: 'Hips back, chest up, bar drags shins. King of lifts.',
-    estimateFrom: 'bench', ratio: 1.5
+  cgbench: {
+    name:'Close-Grip Bench Press', icon:'💪', muscle:'Triceps · Inner Chest',
+    why:'The triceps are 2/3 of your upper arm. The close-grip bench press is the best mass builder for triceps because it allows you to use heavy weight through a full range of motion. This is what gives arms size, not just peak.',
+    sets:'3 sets × 8–10 reps', equipment:'Barbell + Bench + Rack',
+    steps:[
+      'Set up exactly like bench press but place your hands shoulder-width apart or slightly narrower.',
+      'Don\'t go too narrow — wrists should be straight and comfortable, not cocked in.',
+      'Lower the bar to your lower chest, keeping elbows tucked at about 45 degrees.',
+      'Press back up, focusing on squeezing the triceps to lock out.',
+      'The bar path is the same as regular bench but elbows stay tighter to your body.',
+    ],
+    tips:[
+      {icon:'✅', text:'Shoulder-width grip is fine — going narrower just hurts your wrists without adding benefit.'},
+      {icon:'✅', text:'Think about pushing the bar apart (like you\'re bending it) to engage the lats and keep stability.'},
+      {icon:'✅', text:'Focus on the tricep lockout at the top — squeeze hard and hold for a beat.'},
+    ],
+    mistakes:[
+      'Gripping too narrow — hurts wrists and doesn\'t add benefit over shoulder-width.',
+      'Flaring elbows out — defeats the purpose and shifts load to chest.',
+      'Not locking out — the lockout is where the tricep gets peak contraction.',
+    ]
   },
-  {
-    id: 'incline', name: 'Incline DB Press', icon: '↗️', category: 'Upper B',
-    sets: 4, repLow: 8, repHigh: 10, increment: 5,
-    note: '30-45 degree incline. Upper chest builder.',
-    estimateFrom: 'bench', ratio: 0.4, isDB: true, dbNote: '(per dumbbell)'
+  squat: {
+    name:'Barbell Back Squat', icon:'🦵', muscle:'Quads · Glutes · Hamstrings · Core',
+    why:'The squat is the king of lower body exercises. No other movement builds as much quad and glute mass while also triggering full-body hormonal response. For aesthetics, big quads create separation and the "quad sweep" that looks elite.',
+    sets:'4 sets × 6–8 reps', equipment:'Barbell + Squat Rack',
+    steps:[
+      'Set the bar on your upper traps (not your neck). Grip the bar and pull your elbows back and down to create a shelf.',
+      'Step back from the rack — feet slightly wider than shoulder-width, toes pointed out 15-30 degrees.',
+      'Take a deep breath into your belly and brace your core hard (Valsalva maneuver).',
+      'Break at the hips and knees simultaneously — start the movement by pushing your knees out over your toes.',
+      'Descend until your thighs are AT LEAST parallel to the floor. Deeper is better.',
+      'Drive up by pushing the floor away — think "spread the floor" with your feet.',
+      'Exhale at the top. Re-brace before the next rep.',
+    ],
+    tips:[
+      {icon:'✅', text:'Knees should track over your 2nd-3rd toe the entire movement — don\'t let them cave inward.'},
+      {icon:'✅', text:'Keep your chest up and spine neutral — don\'t let your torso collapse forward.'},
+      {icon:'✅', text:'Depth matters — parallel minimum, ass-to-grass if your mobility allows.'},
+    ],
+    mistakes:[
+      'Knees caving in — huge injury risk. If this happens, the weight is too heavy.',
+      'Butt wink (lower back rounding at the bottom) — work on hip flexor mobility.',
+      'Only going halfway down — half squats build half a physique.',
+      'Bar rolling onto your neck — it should be on your upper traps, not your neck bones.',
+    ]
   },
-  {
-    id: 'cablerow', name: 'Seated Cable Row', icon: '↩️', category: 'Upper B',
-    sets: 3, repLow: 10, repHigh: 12, increment: 5,
-    note: 'Squeeze shoulder blades at end of each rep.',
-    estimateFrom: 'bench', ratio: 0.65
+  rdl: {
+    name:'Romanian Deadlift', icon:'🔽', muscle:'Hamstrings · Glutes · Lower Back',
+    why:'The RDL provides a loaded stretch on the hamstrings that almost no other exercise can replicate. Stretched muscle under load = maximum hypertrophy stimulus. This is how you build hamstrings and glutes that actually fill out your legs.',
+    sets:'3 sets × 8–10 reps', equipment:'Barbell or Dumbbells',
+    steps:[
+      'Stand holding the bar at hip height, feet hip-width apart, slight bend in knees.',
+      'Hinge at your hips — push your hips BACK, not down. Think about closing a car door with your butt.',
+      'Lower the bar along your legs, keeping it close to your body.',
+      'Go down until you feel a strong stretch in your hamstrings — usually mid-shin to ankle level.',
+      'Don\'t let your lower back round. Keep it flat or slightly arched.',
+      'Drive your hips forward to stand back up — think about squeezing your glutes to finish.',
+    ],
+    tips:[
+      {icon:'✅', text:'The stretch is the whole point — go as deep as your hamstring flexibility allows without rounding your back.'},
+      {icon:'✅', text:'Keep the bar dragging along your legs the entire way down and up.'},
+      {icon:'✅', text:'Squeeze your glutes hard at the top to fully contract and protect your lower back.'},
+    ],
+    mistakes:[
+      'Bending the knees too much — this turns it into a deadlift, not an RDL.',
+      'Rounding the lower back — stop going lower if your back rounds.',
+      'Letting the bar drift away from your body — keep it close at all times.',
+      'Going too fast — this is a feel exercise, control it.',
+    ]
   },
-  {
-    id: 'curl', name: 'Barbell / EZ Curl', icon: '💪', category: 'Upper A / B',
-    sets: 3, repLow: 10, repHigh: 12, increment: 2.5,
-    note: 'Full extension at bottom. No swinging.',
-    estimateFrom: 'bench', ratio: 0.3
+  bss: {
+    name:'DB Bulgarian Split Squat', icon:'🦵', muscle:'Quads · Glutes · Hip Flexors',
+    why:'The BSS might be the best single-leg exercise on the planet. It produces more quad and glute activation than a regular squat while also improving balance and fixing leg imbalances. Your legs will shake — that\'s normal.',
+    sets:'3 sets × 8–10 each leg', equipment:'Dumbbells + Bench',
+    steps:[
+      'Stand about 2 feet in front of a bench. Hold DBs at your sides.',
+      'Place your rear foot on the bench — either toes down or laces down, whichever is comfortable.',
+      'Your front foot should be far enough forward that your shin stays roughly vertical when you squat down.',
+      'Lower your back knee toward the floor in a controlled way.',
+      'Go until your front thigh is parallel or lower — deep range = more growth.',
+      'Drive through your front heel to stand back up. Don\'t push off the back foot.',
+      'Complete all reps on one leg before switching.',
+    ],
+    tips:[
+      {icon:'✅', text:'If your knee goes too far forward over your toes, step your front foot further out.'},
+      {icon:'✅', text:'Keep your torso upright — don\'t lean forward excessively.'},
+      {icon:'✅', text:'These will feel awkward at first — practice with just bodyweight until you have the movement down.'},
+    ],
+    mistakes:[
+      'Front foot too close — causes the knee to excessively travel forward.',
+      'Pushing off the rear foot — the rear leg is just for balance, not power.',
+      'Going too fast — this is a balance exercise, control is everything.',
+      'Not going deep enough — shallow BSS is just a lunge with a weird setup.',
+    ]
   },
-  {
-    id: 'tricep', name: 'Tricep Pushdown', icon: '⬇️', category: 'Upper A',
-    sets: 3, repLow: 10, repHigh: 15, increment: 5,
-    note: 'Full lockout. Elbows pinned to sides.',
-    estimateFrom: 'bench', ratio: 0.35
+  dbsldl: {
+    name:'DB Stiff-Leg Deadlift', icon:'🔽', muscle:'Hamstrings · Glutes',
+    why:'Similar to the RDL but with straighter legs, this maximizes the hamstring stretch and is a great isolation finisher after squats. The extra hamstring stretch at the bottom creates more metabolic stress and growth stimulus.',
+    sets:'3 sets × 10–12 reps', equipment:'Dumbbells',
+    steps:[
+      'Stand holding DBs in front of your thighs, feet hip-width.',
+      'Keep legs almost completely straight — a very slight bend in the knee is fine to prevent joint lock.',
+      'Hinge at the hips, pushing them back as you lower the DBs down your legs.',
+      'Let the DBs travel down to mid-shin or floor level — wherever you feel maximum hamstring stretch.',
+      'Squeeze your glutes and drive your hips forward to return to standing.',
+    ],
+    tips:[
+      {icon:'✅', text:'The difference from RDL is leg straightness — the straighter the leg, the more hamstring stretch.'},
+      {icon:'✅', text:'Keep your back flat — if it rounds, you\'ve gone too deep for your current flexibility.'},
+      {icon:'✅', text:'This is a feel exercise — go light enough to really feel the hamstring stretch and contraction.'},
+    ],
+    mistakes:[
+      'Rounding the back — stop when you feel your back rounding.',
+      'Bending the knees too much — defeats the purpose vs a regular RDL.',
+      'Going too heavy — this is an isolation move, not a strength exercise.',
+    ]
   },
-];
-
-// ══════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════
-const TARGETS = { cal: 2700, protein: 130, carbs: 340, fat: 80 };
-let state = JSON.parse(localStorage.getItem('roman_v2') || 'null') || {
-  foodLog: [], weightLog: [], streak: 0,
-  lastLogDate: null, checklist: {},
-  lifts: { bench: { orm: 115, sessions: [] } }
+  calfbb: {
+    name:'Standing Calf Raise (BB)', icon:'🦶', muscle:'Gastrocnemius (upper calf)',
+    why:'The gastrocnemius is best trained with a straight knee. Placing the bar on your traps allows for heavier loading and a full stretch at the bottom — the full range of motion is what calves respond to.',
+    sets:'4 sets × 15–20 reps', equipment:'Barbell + Plates to stand on',
+    steps:[
+      'Place a weight plate or step on the floor. Set up like a squat with bar on your upper traps.',
+      'Stand with the balls of your feet on the plate edge — heels hanging off.',
+      'Lower your heels as far as possible below the plate level — full stretch.',
+      'Rise up onto your toes as high as possible — full contraction.',
+      'Pause 1 second at the top. Lower slowly.',
+    ],
+    tips:[
+      {icon:'✅', text:'Full range of motion is critical for calves — from full stretch to full contraction every rep.'},
+      {icon:'✅', text:'Pause at the top to prevent bouncing — bouncing removes the stimulus.'},
+      {icon:'✅', text:'Calves need high reps (15-20+) and volume — they\'re a stubborn muscle group.'},
+    ],
+    mistakes:[
+      'Partial range of motion — calves only grow with a full stretch at the bottom.',
+      'Bouncing at the bottom — this is a stretch reflex cheat, not a muscle contraction.',
+      'Too few reps — calves are used to walking all day, they need high volume to grow.',
+    ]
+  },
+  pullup: {
+    name:'Pull-Ups', icon:'⬆️', muscle:'Lats · Biceps · Upper Back · Rear Delt',
+    why:'Pull-ups are arguably the best back exercise you can do with minimal equipment. They build lat width (the V-taper), bicep size, and rear delt development simultaneously. As you get stronger, add weight with a belt or hold a DB between your feet.',
+    sets:'4 sets × 6–10 reps', equipment:'Pull-Up Bar / Squat Rack Bar',
+    steps:[
+      'Hang from the bar with a shoulder-width or slightly wider overhand grip.',
+      'Let yourself hang fully — full dead hang — before starting each rep.',
+      'Pull your chest toward the bar by driving your elbows down and back.',
+      'Keep your core tight and don\'t swing or kip (unless you\'re doing cardio, not muscle building).',
+      'Go until your chin clears the bar or your chest touches it.',
+      'Lower yourself SLOWLY — 2-3 seconds — back to the dead hang.',
+    ],
+    tips:[
+      {icon:'✅', text:'Think "elbows to your back pockets" — this cue activates the lats instead of just the biceps.'},
+      {icon:'✅', text:'The dead hang at the bottom stretches the lats fully — don\'t skip it.'},
+      {icon:'✅', text:'Can\'t do enough reps? Do negatives — jump to the top, lower yourself as slowly as possible.'},
+    ],
+    mistakes:[
+      'Kipping (swinging) — this is momentum, not muscle. It doesn\'t build size.',
+      'Partial range of motion — not reaching full extension at the bottom.',
+      'Pulling with biceps only — focus on driving your elbows toward the floor.',
+      'Not going all the way up — chin must clear the bar for a full rep.',
+    ]
+  },
+  dbbentrow: {
+    name:'DB Bent-Over Row', icon:'🔙', muscle:'Lats · Mid Back · Rear Delt · Biceps',
+    why:'One arm at a time means you can go heavier and focus on a full range of motion without your weaker side limiting you. Great for lat width and mid-back thickness — the combination that creates a wide, detailed back.',
+    sets:'4 sets × 8–10 each arm', equipment:'Dumbbell + Bench',
+    steps:[
+      'Place your right knee and right hand on the bench for support. Left foot on the floor.',
+      'Hold the DB in your left hand, arm hanging straight down.',
+      'Keep your back flat and parallel to the floor.',
+      'Pull the DB up to your hip/lower chest — elbow drives back and up.',
+      'Squeeze your shoulder blade at the top for 1 second.',
+      'Lower with control. Complete all reps then switch sides.',
+    ],
+    tips:[
+      {icon:'✅', text:'Think about pulling your elbow as far back as possible — not just lifting the DB.'},
+      {icon:'✅', text:'Your shoulder blade should fully retract at the top — you should feel it pinching.'},
+      {icon:'✅', text:'Keep your hips square — don\'t rotate your torso to help lift.'},
+    ],
+    mistakes:[
+      'Rotating the torso to get more range — this is cheating and reduces lat activation.',
+      'Pulling to the chest instead of the hip — pulling to the hip hits the lats, chest hits the rear delt only.',
+      'Using too much bicep — focus on driving the elbow, not curling the weight.',
+      'Rounding the back — keep it flat throughout.',
+    ]
+  },
+  inclinecurl: {
+    name:'DB Incline Curl', icon:'💪', muscle:'Bicep Long Head — peak and length',
+    why:'When you do curls on an incline bench, your arm is behind your body which puts the bicep in a fully stretched position. This stretched position under load is the most powerful signal for muscle growth — this is what builds a peaked, long bicep.',
+    sets:'3 sets × 10–12 reps', equipment:'Dumbbells + Incline Bench',
+    steps:[
+      'Set the bench to 45-60 degrees. Sit back with your back flat against the pad.',
+      'Hold DBs at your sides — let your arms hang straight behind the plane of your body.',
+      'Keep your upper arm stationary — only your forearm moves.',
+      'Curl up, supinating your wrist (palm turns up) as you go.',
+      'Squeeze hard at the top. Lower SLOWLY back to the fully stretched position.',
+      'Don\'t let your elbows drift forward — the stretch comes from keeping them back.',
+    ],
+    tips:[
+      {icon:'✅', text:'The stretch at the bottom (arm behind body) is the entire point of this exercise — don\'t rush it.'},
+      {icon:'✅', text:'Go lighter than your regular curl — the stretched position makes this much harder.'},
+      {icon:'✅', text:'Focus on the lower portion of the movement where the long head is most active.'},
+    ],
+    mistakes:[
+      'Sitting too upright — you lose the arm-behind-body stretch that makes this exercise special.',
+      'Going too heavy — you need to feel the stretch, not muscle through the weight.',
+      'Elbows drifting forward at the bottom — this defeats the stretch position.',
+    ]
+  },
+  dbohtext: {
+    name:'DB Overhead Tricep Extension', icon:'💪', muscle:'Tricep Long Head — size and thickness',
+    why:'The long head of the tricep is the biggest part and is only fully stretched when your arm is overhead. This exercise specifically targets the part of the tricep that adds the most size to your arm — it\'s the difference between flat and thick arms.',
+    sets:'3 sets × 10–12 reps', equipment:'Dumbbell',
+    steps:[
+      'Sit on a bench or stand. Hold one DB with both hands — grip the top plate, not the handle.',
+      'Hold the DB overhead with arms extended.',
+      'Lower the DB behind your head by bending only at the elbows.',
+      'Go until you feel a strong stretch in the back of your arm — elbows should point forward.',
+      'Press back up to the starting position using only the triceps.',
+      'Keep your elbows as close together as possible throughout.',
+    ],
+    tips:[
+      {icon:'✅', text:'Elbows pointed forward — if they flare out, the movement becomes less effective.'},
+      {icon:'✅', text:'Lower as far as your flexibility allows for the maximum stretch.'},
+      {icon:'✅', text:'This is a stretch-based exercise — the deep stretch at the bottom is where the growth signal comes from.'},
+    ],
+    mistakes:[
+      'Elbows flaring wide — reduces long head activation significantly.',
+      'Not lowering fully — you lose the stretch and make this just a partial rep.',
+      'Using momentum to press up — slow and controlled.',
+      'Arching your lower back excessively — keep your core tight.',
+    ]
+  },
+  deadlift: {
+    name:'Conventional Deadlift', icon:'⚡', muscle:'Full Body — Hamstrings, Glutes, Back, Traps, Core',
+    why:'The deadlift activates more total muscle mass than any other exercise. Heavy deadlifts trigger systemic anabolic hormone release (testosterone, growth hormone) that benefits your ENTIRE physique. It builds the posterior chain — the glutes, hamstrings, and back — that create a powerful, aesthetic body.',
+    sets:'4 sets × 4–6 reps', equipment:'Barbell + Plates',
+    steps:[
+      'Stand with the bar over your mid-foot — about 1 inch from your shins. Feet hip-width.',
+      'Hinge down and grip the bar just outside your legs — overhand or mixed grip.',
+      'Drop your hips until your shins touch the bar. Chest up, back flat.',
+      'Take a huge breath into your belly, brace your core HARD (like you\'re about to take a punch).',
+      'Push the floor away with your legs while simultaneously pulling the bar back into your shins.',
+      'The bar should drag up your legs the entire lift — it should stay in contact with your body.',
+      'Stand up fully — squeeze your glutes to lock out at the top. Don\'t hyperextend your back.',
+      'Lower with control by hinging at the hips first, then bending the knees.',
+    ],
+    tips:[
+      {icon:'✅', text:'"Push the floor away" — think of it as a leg press, not a back exercise.'},
+      {icon:'✅', text:'The bar must stay close to your body the entire lift — drifting forward kills your back.'},
+      {icon:'✅', text:'Brace your core before you even begin to pull — the brace is what protects your spine.'},
+    ],
+    mistakes:[
+      'Rounding the lower back — the most dangerous mistake. Stop and reset if this happens.',
+      'Jerking the bar off the floor — take the slack out of the bar before pulling.',
+      'Bar drifting away from the body — keep it dragging up your shins and thighs.',
+      'Looking up too hard — keep your neck neutral, not cranked back.',
+      'Hips shooting up first — hips and shoulders should rise together.',
+    ]
+  },
+  hipthrust: {
+    name:'Barbell Hip Thrust', icon:'🍑', muscle:'Glutes · Hamstrings',
+    why:'The hip thrust is the most effective glute exercise that exists — research consistently shows it produces the highest glute activation of any movement. For aesthetics, developed glutes complete the physique and create the shape that separates average from elite.',
+    sets:'3 sets × 12–15 reps', equipment:'Barbell + Bench + Pad (or folded towel)',
+    steps:[
+      'Sit on the floor with your upper back against the bench. Roll the barbell over your hips.',
+      'Use a pad or folded towel between the bar and your hips — it will hurt without this.',
+      'Feet flat on the floor, shoulder-width, toes slightly out. Knees at about 90 degrees when thrusting.',
+      'Drive your hips up by squeezing your glutes — the bench will catch your upper back.',
+      'At the top, your torso should be parallel to the floor. Squeeze your glutes as hard as possible.',
+      'Hold the top for 1-2 seconds. Lower slowly.',
+    ],
+    tips:[
+      {icon:'✅', text:'The glute squeeze at the top is everything — if you\'re not squeezing hard, you\'re wasting the exercise.'},
+      {icon:'✅', text:'Chin to chest at the top — don\'t hyperextend your neck.'},
+      {icon:'✅', text:'Feet position matters — if you feel it in your quads, move your feet further from your body.'},
+    ],
+    mistakes:[
+      'Not squeezing at the top — this is where 80% of the glute activation happens.',
+      'Hips not reaching parallel — partial range = partial results.',
+      'Hyperextending at the top — you should be flat, not arched.',
+      'No pad on the bar — you\'ll bruise your hip bones, get a pad.',
+    ]
+  },
+  goblet: {
+    name:'DB Goblet Squat', icon:'🏋️', muscle:'Quads · Core · Glutes',
+    why:'The goblet squat teaches perfect squat mechanics while loading the quads and keeping the torso upright. It\'s excellent as a quad finisher because the front-loaded weight forces your core to work and lets you go very deep comfortably.',
+    sets:'3 sets × 12–15 reps', equipment:'Single Dumbbell',
+    steps:[
+      'Hold one DB vertically at your chest — grip the top plate with both hands.',
+      'Feet slightly wider than shoulder-width, toes pointed out 30-45 degrees.',
+      'Keep the DB at chest level the entire time — don\'t let it drop.',
+      'Squat down as deep as you can — the goal is ass-to-grass.',
+      'At the bottom, push your knees out with your elbows if needed to maintain depth.',
+      'Drive back up through your heels.',
+    ],
+    tips:[
+      {icon:'✅', text:'Go as deep as possible — the goblet squat is great for improving squat depth and mobility.'},
+      {icon:'✅', text:'Keep your chest up — the DB at your chest makes this natural.'},
+      {icon:'✅', text:'This should feel like a leg burner finisher — embrace the pump.'},
+    ],
+    mistakes:[
+      'Letting the DB drop — it should stay at chest level to keep you upright.',
+      'Not going deep enough — goblet squats are specifically good for depth, use it.',
+      'Heels rising — if this happens, work on ankle mobility or put small plates under heels.',
+    ]
+  },
+  slcalf: {
+    name:'Single-Leg Calf Raise', icon:'🦶', muscle:'Gastrocnemius · Soleus',
+    why:'Doing calf raises one leg at a time doubles the load per calf and forces balance, leading to greater muscle activation. The full range of motion from hanging off a plate is what makes calves grow — they need the deep stretch.',
+    sets:'4 sets × 15–20 each leg', equipment:'Plate / Step edge',
+    steps:[
+      'Stand with the ball of one foot on the edge of a plate or step.',
+      'Hold something for balance — a rack or wall.',
+      'Lower your heel as far below the plate as possible — maximum stretch.',
+      'Rise onto your tiptoes as high as possible — maximum contraction.',
+      'Pause 1 second at the top. Lower slowly (2-3 seconds).',
+      'Complete all reps on one leg then switch.',
+    ],
+    tips:[
+      {icon:'✅', text:'Full range of motion every single rep — from maximum stretch to maximum contraction.'},
+      {icon:'✅', text:'Add load by holding a DB once bodyweight becomes easy.'},
+      {icon:'✅', text:'Calves are stubborn — you need at least 15-20 reps per set and 4+ sets to stimulate growth.'},
+    ],
+    mistakes:[
+      'Partial reps — calves only respond to full range of motion.',
+      'Bouncing at the bottom — this is the stretch reflex, not a muscle contraction.',
+      'Too few reps — calves need volume. 10-rep sets don\'t grow calves.',
+    ]
+  }
 };
 
-const todayKey = () => new Date().toDateString();
+// ══════════════════════════════
+// LIFT DEFINITIONS FOR STRENGTH TAB
+// ══════════════════════════════
+const LIFTS = [
+  { id:'bench', name:'Barbell Bench Press', icon:'🏋️', cat:'Upper A · Monday', sets:4, lo:6, hi:8, inc:5, note:'Control descent 2-3 sec. Bar to lower chest.', ratio:1.0, anchor:null },
+  { id:'ohp', name:'Overhead Press', icon:'🔼', cat:'Upper A · Monday', sets:3, lo:8, hi:10, inc:5, note:'Core tight. No lean-back. Press straight up.', ratio:0.62, anchor:'bench' },
+  { id:'bbrow', name:'Barbell Row', icon:'🔙', cat:'Upper A · Monday', sets:4, lo:6, hi:8, inc:5, note:'Pull to belly button. Squeeze shoulder blades.', ratio:0.85, anchor:'bench' },
+  { id:'dbincline', name:'DB Incline Press', icon:'↗️', cat:'Upper A+B', sets:3, lo:8, hi:12, inc:2.5, note:'30-45 degrees. Full stretch at bottom. Per DB.', ratio:0.38, anchor:'bench' },
+  { id:'cgbench', name:'Close-Grip Bench Press', icon:'💪', cat:'Upper A · Monday', sets:3, lo:8, hi:10, inc:5, note:'Shoulder-width grip. Elbows tucked at 45 deg.', ratio:0.72, anchor:'bench' },
+  { id:'squat', name:'Back Squat', icon:'🦵', cat:'Lower A · Tuesday', sets:4, lo:6, hi:8, inc:5, note:'At least parallel depth. Knees out. Core braced.', ratio:1.25, anchor:'bench' },
+  { id:'rdl', name:'Romanian Deadlift', icon:'🔽', cat:'Lower A · Tuesday', sets:3, lo:8, hi:10, inc:5, note:'Hinge at hips. Full hamstring stretch.', ratio:1.1, anchor:'bench' },
+  { id:'deadlift', name:'Conventional Deadlift', icon:'⚡', cat:'Lower B · Friday', sets:4, lo:4, hi:6, inc:5, note:'Bar over mid-foot. Brace hard. Bar drags shins.', ratio:1.5, anchor:'bench' },
+  { id:'dbbentrow', name:'DB Bent-Over Row', icon:'🔙', cat:'Upper B · Thursday', sets:4, lo:8, hi:10, inc:2.5, note:'Elbow drives back. Squeeze shoulder blade at top.', ratio:0.42, anchor:'bench' },
+  { id:'lateral', name:'DB Lateral Raise', icon:'↔️', cat:'Upper A+B', sets:4, lo:15, hi:20, inc:2.5, note:'Slight lean forward. Pour pitcher at top. Slow lowering.', ratio:0.12, anchor:'bench' },
+  { id:'dbcurl', name:'DB Curl', icon:'💪', cat:'Upper A', sets:3, lo:10, hi:12, inc:2.5, note:'Supinate at top. Full extension at bottom.', ratio:0.22, anchor:'bench' },
+  { id:'inclinecurl', name:'DB Incline Curl', icon:'💪', cat:'Upper B · Thursday', sets:3, lo:10, hi:12, inc:2.5, note:'Arm behind body = full stretch. Go lighter.', ratio:0.18, anchor:'bench' },
+  { id:'dbohtext', name:'DB Overhead Tricep Ext', icon:'💪', cat:'Upper B · Thursday', sets:3, lo:10, hi:12, inc:2.5, note:'Elbows forward. Lower as deep as possible.', ratio:0.2, anchor:'bench' },
+];
 
-// New day reset
-if (state.lastLogDate !== todayKey()) {
-  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
-  if (state.lastLogDate === yesterday.toDateString() && state.foodLog.length > 0) state.streak++;
-  else if (state.foodLog.length === 0 && state.streak > 0) state.streak = 0;
-  state.foodLog = [];
-  state.checklist = {};
-  state.lastLogDate = todayKey();
-  saveState();
+// ══════════════════════════════
+// STATE
+// ══════════════════════════════
+const TARGETS = { cal:2700, protein:130, carbs:340, fat:80 };
+let S = JSON.parse(localStorage.getItem('rfit_v4') || 'null') || {
+  foodLog:[], weightLog:[], streak:0,
+  lastDate:null, checks:{},
+  lifts:{ bench:{ orm:115, sessions:[] } }
+};
+
+const today = () => new Date().toDateString();
+const toDate = () => { const d=new Date(); return `${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]} ${d.getDate()}`; };
+
+if (S.lastDate !== today()) {
+  const yest = new Date(); yest.setDate(yest.getDate()-1);
+  if (S.lastDate === yest.toDateString() && S.foodLog.length > 0) S.streak++;
+  else if (S.foodLog.length === 0 && S.streak > 0) S.streak = 0;
+  S.foodLog = []; S.checks = {}; S.lastDate = today();
+  save();
 }
+function save() { localStorage.setItem('rfit_v4', JSON.stringify(S)); }
 
-function saveState() { localStorage.setItem('roman_v2', JSON.stringify(state)); }
-
-// ══════════════════════════════════════════
+// ══════════════════════════════
 // LIFT HELPERS
-// ══════════════════════════════════════════
-
-// Get 1RM for a lift (from stored or estimated from bench)
-function getOrm(liftId) {
-  if (state.lifts[liftId]?.orm) return state.lifts[liftId].orm;
-  const def = LIFT_DEFS.find(l => l.id === liftId);
-  if (!def.estimateFrom) return 115;
-  const anchorOrm = getOrm(def.estimateFrom);
-  return roundToPlate(anchorOrm * def.ratio);
+// ══════════════════════════════
+function getOrm(id) {
+  if (S.lifts[id]?.orm) return S.lifts[id].orm;
+  const def = LIFTS.find(l=>l.id===id);
+  if (!def.anchor) return 115;
+  return roundW(getOrm(def.anchor)*def.ratio, def.inc);
 }
-
-// Round to nearest 5 (or 2.5 for small lifts)
-function roundToPlate(w, inc=5) {
-  return Math.round(w / inc) * inc;
+function roundW(w,inc=5) { return Math.round(w/inc)*inc; }
+function getWorking(id) {
+  const orm=getOrm(id); const def=LIFTS.find(l=>l.id===id);
+  const pct = def.lo<=6?0.80:def.lo<=8?0.72:def.lo<=12?0.60:0.45;
+  return roundW(orm*pct, def.inc);
 }
+function getLiftData(id) { if (!S.lifts[id]) S.lifts[id]={orm:getOrm(id),sessions:[]}; return S.lifts[id]; }
+function isReadyToProgress(id) { const d=getLiftData(id); if (!d.sessions?.length) return false; const last=d.sessions[d.sessions.length-1]; return last.allDone&&last.hitTop; }
 
-// Working weight = 70-75% of 1RM for hypertrophy range
-function getWorkingWeight(liftId) {
-  const orm = getOrm(liftId);
-  const def = LIFT_DEFS.find(l => l.id === liftId);
-  const pct = def.repLow <= 6 ? 0.80 : def.repLow <= 8 ? 0.72 : 0.65;
-  return roundToPlate(orm * pct, def.increment || 5);
-}
-
-// Get current rep progress for today's session
-function getSessionData(liftId) {
-  if (!state.lifts[liftId]) state.lifts[liftId] = { orm: getOrm(liftId), sessions: [] };
-  return state.lifts[liftId];
-}
-
-// Check if ready to progress (all sets hit top of rep range last session)
-function isReadyToProgress(liftId) {
-  const data = getSessionData(liftId);
-  if (!data.sessions || data.sessions.length === 0) return false;
-  const last = data.sessions[data.sessions.length - 1];
-  const def = LIFT_DEFS.find(l => l.id === liftId);
-  return last.allSetsComplete && last.topRepHit;
-}
-
-// ══════════════════════════════════════════
-// RENDER STRENGTH TAB
-// ══════════════════════════════════════════
+// ══════════════════════════════
+// RENDER STRENGTH
+// ══════════════════════════════
+let sChecks = {};
 function renderStrength() {
-  const container = document.getElementById('strength-list');
-  container.innerHTML = '';
-
-  LIFT_DEFS.forEach(def => {
-    const orm = getOrm(def.id);
-    const working = getWorkingWeight(def.id);
-    const ready = isReadyToProgress(def.id);
-    const data = getSessionData(def.id);
-    const nextWeight = working + (def.increment || 5);
-
-    // Warm-up sets
-    const warmups = [
-      { pct: '45%', w: roundToPlate(working * 0.45, def.increment), reps: 10 },
-      { pct: '60%', w: roundToPlate(working * 0.60, def.increment), reps: 6 },
-      { pct: '80%', w: roundToPlate(working * 0.80, def.increment), reps: 3 },
-    ];
-
-    const card = document.createElement('div');
-    card.className = 'lift-card';
-    card.innerHTML = `
-      <div class="lift-header" onclick="toggleLiftBody('${def.id}')">
-        <div>
-          <div class="lift-name">${def.icon} ${def.name}</div>
-          <div class="lift-meta">${def.category} · ${def.sets}×${def.repLow}-${def.repHigh}</div>
-        </div>
-        <div class="lift-badge">
-          <div class="lift-1rm">${orm}</div>
-          <div class="lift-1rm-label">1RM (lb)</div>
-        </div>
+  const el = document.getElementById('strength-list');
+  el.innerHTML = '';
+  LIFTS.forEach(def => {
+    const orm=getOrm(def.id), w=getWorking(def.id), ready=isReadyToProgress(def.id), data=getLiftData(def.id), nextW=w+def.inc;
+    const warmups=[{pct:'45%',w:roundW(w*0.45,def.inc),reps:10},{pct:'65%',w:roundW(w*0.65,def.inc),reps:5},{pct:'82%',w:roundW(w*0.82,def.inc),reps:3}];
+    const card=document.createElement('div'); card.className='lift-card';
+    card.innerHTML=`
+      <div class="lift-hdr" onclick="toggleLift('${def.id}')">
+        <div class="lift-icon">${def.icon}</div>
+        <div class="lift-info"><div class="lift-name">${def.name}</div><div class="lift-cat">${def.cat}</div></div>
+        <div class="lift-orm-wrap"><div class="lift-orm">${orm}</div><div class="lift-orm-lbl">1RM lb</div></div>
       </div>
-      <div class="lift-body" id="body-${def.id}">
-
-        ${ready ? `
-        <div class="upgrade-banner show" style="margin:0 0 14px;">
-          <h4>🚀 Add Weight!</h4>
-          <p>You hit all reps last session. Next session use <strong style="color:var(--green)">${nextWeight} lbs</strong> instead of ${working} lbs. You're getting stronger.</p>
-          <button class="btn btn-green" onclick="confirmProgress('${def.id}',${working},${nextWeight})" style="width:100%;justify-content:center;">Confirm → Use ${nextWeight} lbs</button>
-        </div>` : ''}
-
-        <!-- Working Sets -->
-        <div class="card-title" style="margin-bottom:8px;">WORKING SETS — ${working} lbs${def.isDB ? ' ' + def.dbNote : ''}</div>
-        <div class="session-sets" id="sets-${def.id}">
-          ${Array.from({length: def.sets}, (_,i) => `
+      <div class="lift-body" id="lb-${def.id}">
+        ${ready?`<div class="up-banner show"><h4>🚀 Add weight next session!</h4><p>You hit all reps. Use <strong>${nextW} lbs</strong> instead of ${w} lbs next time.</p><button class="btn btn-ink" onclick="confirmProg('${def.id}',${nextW})" style="width:100%;justify-content:center;margin-top:4px;">Confirm → ${nextW} lbs next session</button></div>`:''}
+        <div class="sets-label">Working Sets — ${w} lbs${def.inc<=2.5?' (per DB)':''}</div>
+        <div id="sets-${def.id}">
+          ${Array.from({length:def.sets},(_,i)=>`
           <div class="set-row">
             <div class="set-num">SET ${i+1}</div>
-            <div class="set-weight">${working}<span>lbs</span></div>
-            <div class="set-reps">${def.repLow}–${def.repHigh} reps</div>
-            <div class="set-check" id="setcheck-${def.id}-${i}" onclick="toggleSetCheck('${def.id}',${i},${def.sets})"></div>
+            <div class="set-w">${w}<small>lbs</small></div>
+            <div class="set-reps">${def.lo}–${def.hi} reps</div>
+            <div class="set-chk ${sChecks[def.id+'-'+i]?'done':''}" id="sc-${def.id}-${i}" onclick="toggleSet('${def.id}',${i},${def.sets})">${sChecks[def.id+'-'+i]?'✓':''}</div>
           </div>`).join('')}
         </div>
-
-        <!-- Warm-up -->
-        <div class="card-title" style="margin:12px 0 8px;">WARM-UP (do these first)</div>
-        ${warmups.map(wu => `
-        <div class="set-row">
-          <div class="set-num" style="color:var(--muted);font-size:10px;">${wu.pct}</div>
-          <div class="set-weight" style="font-size:16px;color:var(--muted)">${wu.w}<span>lbs</span></div>
-          <div class="set-reps" style="color:var(--muted)">${wu.reps} reps</div>
-          <div style="width:26px;"></div>
-        </div>`).join('')}
-
-        <!-- Note -->
-        <div style="background:var(--surface2);border-radius:10px;padding:10px 12px;margin:12px 0;font-size:12px;color:var(--muted);line-height:1.5;">
-          💡 ${def.note}
+        <div class="warmup-section">
+          <div class="sets-label">Warm-Up First</div>
+          ${warmups.map(wu=>`<div class="warmup-row"><div class="warmup-pct">${wu.pct}</div><div class="warmup-w">${wu.w}<small> lbs</small></div><div class="warmup-reps">${wu.reps} reps</div></div>`).join('')}
         </div>
-
-        <!-- Update 1RM -->
-        <div class="orm-edit-row">
-          <input class="orm-input" type="number" id="orm-inp-${def.id}" placeholder="Update 1RM (lb)" min="20" max="800">
+        <div class="lift-note">💡 ${def.note}</div>
+        <div class="orm-row">
+          <input class="orm-inp" type="number" id="oi-${def.id}" placeholder="Update your 1RM (lb)">
           <button class="btn btn-purple" onclick="updateOrm('${def.id}')" style="flex-shrink:0;">Save</button>
         </div>
-
-        <!-- History -->
-        ${data.sessions && data.sessions.length > 0 ? `
-        <div class="session-history">
-          <div class="card-title" style="margin-bottom:8px;">RECENT SESSIONS</div>
-          ${data.sessions.slice(-5).reverse().map(s => `
-          <div class="history-row">
-            <span class="history-date">${s.date}</span>
-            <span class="history-val">${s.weight} lbs · ${s.topRepHit ? '✅ hit top rep' : '🔄 building'}</span>
-          </div>`).join('')}
-        </div>` : ''}
-      </div>
-    `;
-    container.appendChild(card);
+        ${data.sessions?.length?`<div class="sess-hist"><div class="sets-label" style="margin-bottom:6px;">Recent Sessions</div>${data.sessions.slice(-4).reverse().map(s=>`<div class="hist-row"><span class="hist-date">${s.date}</span><span class="hist-val" style="color:${s.hitTop?'var(--green)':'var(--text2)'}">${s.weight}lbs · ${s.hitTop?'✅ add weight':'🔄 building'}</span></div>`).join('')}</div>`:''}
+      </div>`;
+    el.appendChild(card);
   });
-
-  document.getElementById('stat-bench').innerHTML = getOrm('bench') + '<span class="stat-card-unit">lb</span>';
+  document.getElementById('s-bench').innerHTML = getOrm('bench')+'<span class="stat-tile-unit">lb</span>';
 }
 
-function toggleLiftBody(id) {
-  const body = document.getElementById('body-' + id);
-  body.classList.toggle('open');
+function toggleLift(id) { document.getElementById('lb-'+id).classList.toggle('open'); }
+
+function toggleSet(liftId,idx,total) {
+  const key=liftId+'-'+idx; sChecks[key]=!sChecks[key];
+  const el=document.getElementById('sc-'+liftId+'-'+idx);
+  el.classList.toggle('done',sChecks[key]); el.textContent=sChecks[key]?'✓':'';
+  if(sChecks[key]) toast('Set done! 💪');
+  const allDone=Array.from({length:total},(_,i)=>sChecks[liftId+'-'+i]).every(Boolean);
+  if(allDone){setTimeout(()=>{const hitTop=confirm(`Did you hit ${LIFTS.find(l=>l.id===liftId).hi} reps on your last set?`);if(!S.lifts[liftId])S.lifts[liftId]={orm:getOrm(liftId),sessions:[]};S.lifts[liftId].sessions.push({date:today(),weight:getWorking(liftId),allDone:true,hitTop});save();renderStrength();toast(hitTop?'🚀 Add weight next session!':'💪 Keep grinding!');},300);}
 }
 
-// Track set completions per lift per session
-let sessionChecks = {};
-
-function toggleSetCheck(liftId, setIdx, totalSets) {
-  const key = `${liftId}-${setIdx}`;
-  const el = document.getElementById(`setcheck-${liftId}-${setIdx}`);
-  sessionChecks[key] = !sessionChecks[key];
-  el.classList.toggle('done', sessionChecks[key]);
-  el.textContent = sessionChecks[key] ? '✓' : '';
-  if (sessionChecks[key]) showToast('Set ✓ 💪');
-
-  // Check if all sets done for this lift
-  const allDone = Array.from({length: totalSets}, (_,i) => sessionChecks[`${liftId}-${i}`]).every(Boolean);
-  if (allDone) {
-    // Record session
-    const def = LIFT_DEFS.find(l => l.id === liftId);
-    if (!state.lifts[liftId]) state.lifts[liftId] = { orm: getOrm(liftId), sessions: [] };
-    const w = getWorkingWeight(liftId);
-    // Ask if they hit the top rep
-    setTimeout(() => {
-      const hitTop = confirm(`🎯 ${def.name}: Did you hit ${def.repHigh} reps on your last set?`);
-      state.lifts[liftId].sessions.push({
-        date: todayKey(),
-        weight: w,
-        allSetsComplete: true,
-        topRepHit: hitTop
-      });
-      saveState();
-      renderStrength();
-      showToast(hitTop ? '🚀 Add weight next session!' : '💪 Keep grinding, you\'ll get there!');
-    }, 300);
-  }
+function updateOrm(id) {
+  const val=parseFloat(document.getElementById('oi-'+id).value);
+  if(!val||val<20){toast('Enter a valid weight');return;}
+  if(!S.lifts[id])S.lifts[id]={sessions:[]};
+  S.lifts[id].orm=val; save(); renderStrength(); toast('1RM updated! Weights recalculated 🔄');
 }
 
-function updateOrm(liftId) {
-  const inp = document.getElementById('orm-inp-' + liftId);
-  const val = parseFloat(inp.value);
-  if (!val || val < 20) { showToast('Enter a valid weight'); return; }
-  if (!state.lifts[liftId]) state.lifts[liftId] = { sessions: [] };
-  state.lifts[liftId].orm = val;
-  saveState();
-  inp.value = '';
-  renderStrength();
-  showToast('1RM updated! Working weight recalculated 🔄');
+function confirmProg(id,newW) {
+  if(!S.lifts[id])S.lifts[id]={orm:getOrm(id),sessions:[]};
+  S.lifts[id].orm=Math.round(S.lifts[id].orm*1.045); save(); renderStrength(); toast(`Moving to ${newW} lbs! 🚀`);
 }
 
-function confirmProgress(liftId, oldW, newW) {
-  if (!state.lifts[liftId]) state.lifts[liftId] = { orm: getOrm(liftId), sessions: [] };
-  // Bump the ORM estimate slightly to reflect the progress
-  state.lifts[liftId].orm = Math.round(state.lifts[liftId].orm * 1.04);
-  saveState();
-  renderStrength();
-  showToast(`Moving to ${newW} lbs! Let's go 🚀`);
+// ══════════════════════════════
+// EXERCISE MODAL
+// ══════════════════════════════
+function showEx(id) {
+  const ex = EXERCISES[id];
+  if (!ex) return;
+  document.getElementById('em-icon').textContent = ex.icon;
+  document.getElementById('em-name').textContent = ex.name;
+  document.getElementById('em-muscle').textContent = ex.muscle;
+  document.getElementById('em-body').innerHTML = `
+    <div class="ex-section">
+      <div class="ex-section-title">Why this exercise</div>
+      <div class="ex-why">${ex.why}</div>
+    </div>
+    <div class="ex-section">
+      <div class="sets-rec"><span class="sets-rec-label">Prescription</span><span class="sets-rec-val">${ex.sets}</span></div>
+    </div>
+    <div class="ex-section" style="margin-top:14px;">
+      <div class="ex-section-title">How to do it — step by step</div>
+      ${ex.steps.map((s,i)=>`<div class="step-row"><div class="step-num">${i+1}</div><div class="step-text">${s}</div></div>`).join('')}
+    </div>
+    <div class="ex-section">
+      <div class="ex-section-title">Tips for more growth</div>
+      ${ex.tips.map(t=>`<div class="tip-row"><div class="tip-icon">${t.icon}</div><div class="tip-text">${t.text}</div></div>`).join('')}
+    </div>
+    <div class="ex-section">
+      <div class="ex-section-title">Common mistakes to avoid</div>
+      ${ex.mistakes.map(m=>`<div class="mistake-row"><div class="mistake-x">✕</div><div class="mistake-text">${m}</div></div>`).join('')}
+    </div>
+    <div style="height:8px;"></div>
+  `;
+  document.getElementById('ex-modal-bg').classList.add('show');
+  document.getElementById('ex-modal').scrollTop = 0;
 }
 
-// ══════════════════════════════════════════
+function closeEx(e) { if(e.target===document.getElementById('ex-modal-bg')) document.getElementById('ex-modal-bg').classList.remove('show'); }
+function closeExBtn() { document.getElementById('ex-modal-bg').classList.remove('show'); }
+
+// ══════════════════════════════
 // FOOD
-// ══════════════════════════════════════════
-const TARGETS_M = TARGETS;
-function getTotals() {
-  return state.foodLog.reduce((acc,f) => ({
-    cal: acc.cal+f.cal, protein: acc.protein+f.protein,
-    carbs: acc.carbs+f.carbs, fat: acc.fat+f.fat
-  }), {cal:0,protein:0,carbs:0,fat:0});
-}
+// ══════════════════════════════
+function getTotals() { return S.foodLog.reduce((a,f)=>({cal:a.cal+f.cal,protein:a.protein+f.protein,carbs:a.carbs+f.carbs,fat:a.fat+f.fat}),{cal:0,protein:0,carbs:0,fat:0}); }
 
 async function logFood() {
-  const input = document.getElementById('food-input');
-  const text = input.value.trim();
-  if (!text) return;
-  const loading = document.getElementById('food-loading');
-  loading.classList.add('show');
-  input.disabled = true;
+  const inp=document.getElementById('food-input'), text=inp.value.trim();
+  if(!text){toast('Type what you ate first!');return;}
+  const load=document.getElementById('food-loading');
+  load.classList.add('show'); inp.disabled=true;
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer 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' },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        max_tokens: 300,
-        messages: [
-          { role: 'system', content: 'You are a nutrition analyzer. Return ONLY a JSON object (no markdown, no backticks) with: {"name":"short food name","cal":number,"protein":number,"carbs":number,"fat":number}. All macros in grams, calories as kcal. If multiple foods, combine into one entry.' },
-          { role: 'user', content: text }
-        ]
-      })
-    });
-    const data = await response.json();
-    const raw = data.choices[0].message.content.replace(/```json|```/g,'').trim();
-    const parsed = JSON.parse(raw);
-    parsed.id = Date.now();
-    parsed.time = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    state.foodLog.push(parsed);
-    saveState();
-    renderFoodLog();
-    updateMacroDisplay();
-    renderChecklist();
-    input.value = '';
-    showToast(`+${parsed.cal} cal · +${Math.round(parsed.protein)}g protein 🔥`);
-  } catch(e) { showToast('Error — try again'); }
-  finally { loading.classList.remove('show'); input.disabled = false; }
+    const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer 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'},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:300,messages:[{role:'system',content:'You are a nutrition analyzer. Return ONLY a valid JSON object with no markdown, no backticks, no explanation: {"name":"short food name","cal":number,"protein":number,"carbs":number,"fat":number}. All macros in grams, calories as kcal integer. If multiple foods described, combine into one entry.'},{role:'user',content:text}]})});
+    const data=await res.json();
+    const raw=data.choices[0].message.content.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(raw);
+    parsed.id=Date.now(); parsed.time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    S.foodLog.push(parsed); save(); renderFood(); updateMacros(); renderChecklist();
+    inp.value=''; toast(`+${parsed.cal} cal · +${Math.round(parsed.protein)}g protein 🔥`);
+  } catch(e){ console.error(e); toast('Error — check your connection and try again'); }
+  finally { load.classList.remove('show'); inp.disabled=false; }
 }
 
-function quickAdd(text) {
-  document.getElementById('food-input').value = text;
-  showScreen('food', document.querySelectorAll('.nav-btn')[1]);
-}
+function qa(text) { document.getElementById('food-input').value=text; showScreen('food',document.querySelectorAll('.nav-btn')[1]); }
 
-function renderFoodLog() {
-  const list = document.getElementById('food-log-list');
-  const empty = document.getElementById('food-log-empty');
-  if (!state.foodLog.length) { empty.style.display='block'; list.innerHTML=''; return; }
+function renderFood() {
+  const list=document.getElementById('food-list'), empty=document.getElementById('food-empty');
+  if(!S.foodLog.length){empty.style.display='block';list.innerHTML='';return;}
   empty.style.display='none';
-  list.innerHTML = state.foodLog.map(f=>`
-    <div class="food-log-item">
-      <div><div class="food-name">${f.name}</div>
-        <div class="food-macros">${f.time} · P:${Math.round(f.protein)}g C:${Math.round(f.carbs)}g F:${Math.round(f.fat)}g</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <div class="food-cal">${f.cal}</div>
-        <button class="food-del" onclick="deleteFood(${f.id})">×</button>
-      </div>
+  list.innerHTML=S.foodLog.map(f=>`
+    <div class="food-item">
+      <div class="food-dot"></div>
+      <div class="food-info"><div class="food-name">${f.name}</div><div class="food-meta">${f.time} · P:${Math.round(f.protein)}g C:${Math.round(f.carbs)}g F:${Math.round(f.fat)}g</div></div>
+      <div class="food-cal-val">${f.cal}</div>
+      <button class="food-del" onclick="delFood(${f.id})">×</button>
     </div>`).join('');
 }
 
-function deleteFood(id) {
-  state.foodLog = state.foodLog.filter(f=>f.id!==id);
-  saveState(); renderFoodLog(); updateMacroDisplay(); renderChecklist();
-  showToast('Removed');
+function delFood(id) { S.foodLog=S.foodLog.filter(f=>f.id!==id); save(); renderFood(); updateMacros(); renderChecklist(); toast('Removed'); }
+
+function updateMacros() {
+  const t=getTotals(), circ=2*Math.PI*38;
+  document.getElementById('cal-ring').style.strokeDashoffset=circ-(circ*Math.min(t.cal/TARGETS.cal,1));
+  document.getElementById('ring-cal').textContent=t.cal;
+  document.getElementById('bp').style.width=Math.min(t.protein/TARGETS.protein*100,100)+'%';
+  document.getElementById('bc').style.width=Math.min(t.carbs/TARGETS.carbs*100,100)+'%';
+  document.getElementById('bf').style.width=Math.min(t.fat/TARGETS.fat*100,100)+'%';
+  document.getElementById('bp-val').textContent=`${Math.round(t.protein)}/${TARGETS.protein}g`;
+  document.getElementById('bc-val').textContent=`${Math.round(t.carbs)}/${TARGETS.carbs}g`;
+  document.getElementById('bf-val').textContent=`${Math.round(t.fat)}/${TARGETS.fat}g`;
+  document.getElementById('s-cal-left').textContent=Math.max(0,TARGETS.cal-t.cal);
 }
 
-function updateMacroDisplay() {
-  const t = getTotals();
-  const circ = 2*Math.PI*42;
-  const pct = Math.min(t.cal/TARGETS.cal,1);
-  document.getElementById('cal-ring').style.strokeDashoffset = circ-(circ*pct);
-  document.getElementById('ring-cal').textContent = t.cal;
-  document.getElementById('bar-p').style.width = Math.min(t.protein/TARGETS.protein*100,100)+'%';
-  document.getElementById('bar-c').style.width = Math.min(t.carbs/TARGETS.carbs*100,100)+'%';
-  document.getElementById('bar-f').style.width = Math.min(t.fat/TARGETS.fat*100,100)+'%';
-  document.getElementById('bar-p-val').textContent = `${Math.round(t.protein)}/${TARGETS.protein}g`;
-  document.getElementById('bar-c-val').textContent = `${Math.round(t.carbs)}/${TARGETS.carbs}g`;
-  document.getElementById('bar-f-val').textContent = `${Math.round(t.fat)}/${TARGETS.fat}g`;
-  document.getElementById('stat-cal-left').textContent = Math.max(0,TARGETS.cal-t.cal);
-}
-
-// ══════════════════════════════════════════
+// ══════════════════════════════
 // CHECKLIST
-// ══════════════════════════════════════════
-const CHECKLIST = [
-  {id:'cre',text:'Take creatine (5g)',sub:'Do it right now if you haven\'t',icon:'🧪'},
-  {id:'pro',text:'Hit 130g protein',sub:'Auto-checked when you log enough food',icon:'💪'},
-  {id:'cal',text:'Hit 2700 calories',sub:'Auto-checked via food log',icon:'🔥'},
-  {id:'sleep',text:'8+ hours sleep tonight',sub:'Growth hormone peaks during deep sleep',icon:'😴'},
-  {id:'water',text:'Drink 8+ glasses water',sub:'Muscle function depends on hydration',icon:'💧'},
-  {id:'workout',text:'Complete today\'s workout',sub:'Check off your sets in the Strength tab',icon:'🏋️'},
+// ══════════════════════════════
+const CHECKS=[
+  {id:'cre',title:'Take creatine (5g)',sub:'Do it right now if you haven\'t',icon:'🧪'},
+  {id:'pro',title:'Hit 130g protein',sub:'Auto-checked when you log enough',icon:'💪'},
+  {id:'cal',title:'Hit 2700 calories',sub:'Auto-checked via food log',icon:'🔥'},
+  {id:'sleep',title:'8+ hours sleep tonight',sub:'Growth hormone peaks during deep sleep',icon:'😴'},
+  {id:'water',title:'Drink 8+ glasses water',sub:'Muscle protein synthesis depends on it',icon:'💧'},
+  {id:'workout',title:'Complete today\'s workout',sub:'Check sets off in the Strength tab',icon:'🏋️'},
 ];
+
 function renderChecklist() {
-  const t = getTotals();
-  if (t.protein >= 130) state.checklist['pro'] = true;
-  if (t.cal >= 2700) state.checklist['cal'] = true;
-  document.getElementById('checklist-card').innerHTML = CHECKLIST.map(item => {
-    const done = !!state.checklist[item.id];
-    return `<div class="check-item ${done?'done':''}" onclick="toggleCheck('${item.id}',this)">
+  const t=getTotals();
+  if(t.protein>=130)S.checks['pro']=true;
+  if(t.cal>=2700)S.checks['cal']=true;
+  document.getElementById('checklist-card').innerHTML=CHECKS.map(c=>{
+    const done=!!S.checks[c.id];
+    return `<div class="check-row ${done?'done':''}" onclick="toggleCheck('${c.id}',this)">
       <div class="check-box">${done?'✓':''}</div>
-      <div class="ex-details">
-        <div class="check-text">${item.icon} ${item.text}</div>
-        <div class="check-sub">${item.sub}</div>
-      </div>
+      <div class="check-main"><div class="check-title">${c.icon} ${c.title}</div><div class="check-sub">${c.sub}</div></div>
     </div>`;
   }).join('');
 }
-function toggleCheck(id,el) {
-  state.checklist[id]=!state.checklist[id]; saveState();
-  el.classList.toggle('done');
-  el.querySelector('.check-box').textContent = state.checklist[id]?'✓':'';
-  if(state.checklist[id]) showToast('✓ Done!');
-}
 
-// ══════════════════════════════════════════
+function toggleCheck(id,el) { S.checks[id]=!S.checks[id]; save(); el.classList.toggle('done'); el.querySelector('.check-box').textContent=S.checks[id]?'✓':''; if(S.checks[id])toast('✓ Checked off!'); }
+
+// ══════════════════════════════
 // WEIGHT
-// ══════════════════════════════════════════
+// ══════════════════════════════
 function logWeight() {
-  const val = parseFloat(document.getElementById('weight-input').value);
-  if (!val||val<80||val>400) { showToast('Enter a valid weight'); return; }
-  state.weightLog.push({d:todayKey(),w:val,ts:Date.now()});
-  saveState();
-  document.getElementById('weight-input').value='';
-  renderWeightLog(); renderWeightChart(); updateStats();
-  showToast(`${val} lbs logged! 📈`);
-}
-function renderWeightLog() {
-  const el = document.getElementById('weight-log-list');
-  if (!state.weightLog.length) { el.innerHTML='<div style="color:var(--muted);font-size:13px;text-align:center;padding:10px;">No entries yet.</div>'; return; }
-  el.innerHTML = [...state.weightLog].reverse().slice(0,10).map(e=>`
-    <div class="food-log-item">
-      <div class="food-name">${e.d}</div>
-      <div style="font-size:20px;font-weight:800;color:var(--blue)">${e.w} lb</div>
-    </div>`).join('');
-}
-function renderWeightChart() {
-  const canvas = document.getElementById('weightChart');
-  const empty = document.getElementById('weight-chart-empty');
-  if (state.weightLog.length < 2) { canvas.style.display='none'; empty.style.display='block'; return; }
-  canvas.style.display='block'; empty.style.display='none';
-  const ctx = canvas.getContext('2d');
-  const DPR = window.devicePixelRatio||1;
-  const W = canvas.offsetWidth*DPR||360; const H = 160;
-  canvas.width=W; canvas.height=H;
-  const data = state.weightLog.slice(-14);
-  const weights = data.map(d=>d.w);
-  const min=Math.min(...weights)-2, max=Math.max(...weights)+2;
-  const pad={l:40,r:16,t:16,b:32};
-  const gw=W-pad.l-pad.r, gh=H-pad.t-pad.b;
-  ctx.clearRect(0,0,W,H);
-  ctx.strokeStyle='#2a2a3a'; ctx.lineWidth=1;
-  [0,0.5,1].forEach(t=>{
-    const y=pad.t+gh*(1-t);
-    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
-    ctx.fillStyle='#6b6b8a'; ctx.font=`${10*DPR}px Syne`;
-    ctx.fillText(Math.round(min+(max-min)*t),2,y+4);
-  });
-  const pts=data.map((d,i)=>({x:pad.l+(i/(data.length-1))*gw,y:pad.t+gh*(1-(d.w-min)/(max-min))}));
-  const grd=ctx.createLinearGradient(0,pad.t,0,H-pad.b);
-  grd.addColorStop(0,'rgba(68,136,255,0.3)'); grd.addColorStop(1,'rgba(68,136,255,0)');
-  ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y);
-  pts.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));
-  ctx.lineTo(pts[pts.length-1].x,H-pad.b); ctx.lineTo(pts[0].x,H-pad.b);
-  ctx.closePath(); ctx.fillStyle=grd; ctx.fill();
-  ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y);
-  pts.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));
-  ctx.strokeStyle='#4488ff'; ctx.lineWidth=2.5; ctx.stroke();
-  pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,4,0,Math.PI*2);ctx.fillStyle='#4488ff';ctx.fill();ctx.strokeStyle='#0a0a0f';ctx.lineWidth=2;ctx.stroke();});
-}
-function updateStats() {
-  const wl=state.weightLog;
-  if(wl.length>0){
-    document.getElementById('stat-weight').innerHTML=wl[wl.length-1].w+'<span class="stat-card-unit">lb</span>';
-    if(wl.length>1){const diff=(wl[wl.length-1].w-wl[wl.length-2].w).toFixed(1);const el=document.getElementById('stat-weight-change');el.textContent=(diff>0?'+':'')+diff+' lbs';el.className='stat-card-change '+(diff>=0?'up':'down');}
-  }
-  document.getElementById('stat-streak').textContent=state.streak;
-  document.getElementById('streak-num').textContent=state.streak;
+  const val=parseFloat(document.getElementById('w-inp').value);
+  if(!val||val<80||val>400){toast('Enter a valid weight');return;}
+  S.weightLog.push({d:today(),w:val}); save();
+  document.getElementById('w-inp').value='';
+  renderWeightLog(); renderWeightChart(); updateStats(); toast(`${val} lbs logged! 📈`);
 }
 
-// ══════════════════════════════════════════
-// NAV & UTILS
-// ══════════════════════════════════════════
+function renderWeightLog() {
+  const el=document.getElementById('wlog-list');
+  if(!S.weightLog.length){el.innerHTML='<div class="chart-empty">No entries yet.</div>';return;}
+  el.innerHTML=[...S.weightLog].reverse().slice(0,10).map(e=>`
+    <div class="wlog-row"><span class="wlog-date">${e.d}</span><span class="wlog-val">${e.w} lb</span></div>`).join('');
+}
+
+function renderWeightChart() {
+  const canvas=document.getElementById('wChart'), empty=document.getElementById('chart-empty');
+  if(S.weightLog.length<2){canvas.style.display='none';empty.style.display='block';return;}
+  canvas.style.display='block';empty.style.display='none';
+  const DPR=window.devicePixelRatio||1, W=canvas.offsetWidth*DPR||360, H=150;
+  canvas.width=W;canvas.height=H;
+  const ctx=canvas.getContext('2d'), data=S.weightLog.slice(-14), weights=data.map(d=>d.w);
+  const min=Math.min(...weights)-1.5, max=Math.max(...weights)+1.5;
+  const pad={l:44,r:12,t:12,b:28}, gw=W-pad.l-pad.r, gh=H-pad.t-pad.b;
+  ctx.clearRect(0,0,W,H);
+  [0,0.5,1].forEach(t=>{const y=pad.t+gh*(1-t);ctx.strokeStyle='#e0ddd6';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();ctx.fillStyle='#9b9690';ctx.font=`${10*DPR}px sans-serif`;ctx.fillText((min+(max-min)*t).toFixed(1),2,y+4);});
+  const pts=data.map((d,i)=>({x:pad.l+(i/(data.length-1))*gw,y:pad.t+gh*(1-(d.w-min)/(max-min))}));
+  const grd=ctx.createLinearGradient(0,pad.t,0,H-pad.b);grd.addColorStop(0,'rgba(200,241,53,0.25)');grd.addColorStop(1,'rgba(200,241,53,0)');
+  ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);pts.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));ctx.lineTo(pts[pts.length-1].x,H-pad.b);ctx.lineTo(pts[0].x,H-pad.b);ctx.closePath();ctx.fillStyle=grd;ctx.fill();
+  ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);pts.slice(1).forEach(p=>ctx.lineTo(p.x,p.y));ctx.strokeStyle='#a8d01a';ctx.lineWidth=2.5*DPR;ctx.lineJoin='round';ctx.stroke();
+  pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,4*DPR,0,Math.PI*2);ctx.fillStyle='#a8d01a';ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=2*DPR;ctx.stroke();});
+}
+
+function updateStats() {
+  const wl=S.weightLog;
+  if(wl.length){document.getElementById('s-weight').innerHTML=wl[wl.length-1].w+'<span class="stat-tile-unit">lb</span>';if(wl.length>1){const diff=(wl[wl.length-1].w-wl[wl.length-2].w).toFixed(1);const el=document.getElementById('s-weight-ch');el.textContent=(diff>0?'+':'')+diff+' lbs';el.className='stat-tile-change '+(diff>=0?'up':'dn');}}
+  document.getElementById('s-streak').textContent=S.streak;
+  document.getElementById('streak-num').textContent=S.streak;
+}
+
+// ══════════════════════════════
+// NAV + UTILS
+// ══════════════════════════════
 function showScreen(name,btn) {
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
   btn.classList.add('active');
-  if(name==='home'){updateMacroDisplay();renderChecklist();checkReminder();}
-  if(name==='strength') renderStrength();
+  if(name==='home'){updateMacros();renderChecklist();checkReminder();}
+  if(name==='strength')renderStrength();
   if(name==='weight'){renderWeightLog();renderWeightChart();}
 }
-function toggleEx(box){box.classList.toggle('done');box.textContent=box.classList.contains('done')?'✓':'';if(box.classList.contains('done'))showToast('Set done! 💪');}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
-function checkReminder(){
-  const h=new Date().getHours();const t=getTotals();const banner=document.getElementById('reminder-banner');
+
+function toggleEx(box) { box.classList.toggle('done'); box.textContent=box.classList.contains('done')?'✓':''; if(box.classList.contains('done'))toast('Exercise done! 💪'); }
+
+function checkReminder() {
+  const h=new Date().getHours(), t=getTotals(), banner=document.getElementById('reminder');
   let show=false,title='',body='';
   if(h>=7&&h<9&&t.cal<100){show=true;title='🌅 Breakfast time!';body='Fuel up — aim for 700+ calories.';}
-  else if(h>=12&&h<14&&t.cal<700){show=true;title='☀️ Lunch time!';body="You're under 700 cal — time for a big meal.";}
-  else if(h>=21&&t.cal<2000){show=true;title='🌙 Hit your calories!';body=`Still need ${2700-t.cal} more calories today.`;}
+  else if(h>=12&&h<14&&t.cal<700){show=true;title='☀️ Lunch time!';body="Under 700 cal — time for a big meal.";}
+  else if(h>=21&&t.cal<2000){show=true;title='🌙 Hit your calories!';body=`Still need ${TARGETS.cal-t.cal} more calories today.`;}
   banner.style.display=show?'flex':'none';
   if(show){document.getElementById('reminder-title').textContent=title;document.getElementById('reminder-body').textContent=body;}
 }
 
-// ══════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════
+function toast(msg) { const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400); }
+
 document.addEventListener('DOMContentLoaded',()=>{
-  const now=new Date();
+  const d=new Date();
   const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  document.getElementById('header-date').textContent=`${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
-  updateMacroDisplay(); renderChecklist(); renderFoodLog();
-  renderWeightLog(); renderWeightChart(); updateStats(); checkReminder();
+  document.getElementById('header-date').textContent=`${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
+  document.getElementById('hero-date').textContent=toDate();
+  updateMacros();renderChecklist();renderFood();renderWeightLog();renderWeightChart();updateStats();checkReminder();
 });
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement.id==='weight-input')logWeight();});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement.id==='w-inp')logWeight();});
 window.addEventListener('resize',renderWeightChart);
 </script>
-
 </body>
 </html>
